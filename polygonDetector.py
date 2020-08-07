@@ -5,6 +5,7 @@ from PIL import Image, ImageOps
 from booleanFilter import MapArray
 from xorEdgeDetect import xorEdgeDetect
 from Vector2D import Vector2D
+from booleanMatrixToPointList import booleanMatrixToPointList
 
 
 def neighbouringPoints(pointList):
@@ -41,11 +42,11 @@ def main():
 
     edgeDetectedMap = xorEdgeDetect(map)
 
-    sparseMap = csr_matrix(edgeDetectedMap.array)
-
-    pointList = [Vector2D(x, y)
-                 for x in range(sparseMap.shape[0])
-                 for y in sparseMap.indices[sparseMap.indptr[x]:sparseMap.indptr[x+1]]]
+    # sparseMap = csr_matrix(edgeDetectedMap.array)
+    # pointList = [Vector2D(x, y)
+    #              for x in range(sparseMap.shape[0])
+    #              for y in sparseMap.indices[sparseMap.indptr[x]:sparseMap.indptr[x+1]]]
+    pointList = booleanMatrixToPointList(edgeDetectedMap.array)
 
     polygons = neighbouringPoints(pointList)
     imList = list()

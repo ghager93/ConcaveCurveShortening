@@ -17,14 +17,20 @@ def splitSegmentHorizontally(segment: LoopSegment):
     rightPoints = [p for p in segment.points if p.x > segment.mid().x]
 
     leftSegment = LoopSegment(segment.topLeft, Vector2D(segment.mid().x, segment.bottomRight.y), leftPoints)
-    rightSegment = LoopSegment(Vector2D(segment.mid().x, segment.topLeft.y), segment.bottomRight, rightPoints)
+    rightSegment = LoopSegment(Vector2D(segment.mid().x+1, segment.topLeft.y), segment.bottomRight, rightPoints)
 
     return leftSegment, rightSegment
+
 
 def splitSegmentVertically(segment: LoopSegment):
     upperPoints = [p for p in segment.points if p.y <= segment.mid().y]
     lowerPoints = [p for p in segment.points if p.y > segment.mid().y]
 
-    upperSegment = LoopSegment(segment.topLeft, Vector2D())
+    upperSegment = LoopSegment(segment.topLeft, Vector2D(segment.bottomRight.x, segment.mid().y), upperPoints)
+    lowerSegment = LoopSegment(Vector2D(segment.topLeft.x, segment.mid().y+1), segment.bottomRight, lowerPoints)
 
-def segmentImage(image):
+    return upperSegment, lowerSegment
+
+
+def segmentMap(map):
+    pass
