@@ -1,8 +1,9 @@
 from LoopSegment import LoopSegment
 from Vector2D import Vector2D
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from typing import List
+from booleanMatrixToPointList import booleanMatrixToPointList
 
 
 def splitSegment(segment: LoopSegment):
@@ -32,5 +33,8 @@ def splitSegmentVertically(segment: LoopSegment):
     return upperSegment, lowerSegment
 
 
-def segmentMap(map):
+def segmentMap(map: np.ndarray):
+    mapSegment = LoopSegment(Vector2D(0, 0), Vector2D(map.shape[0]-1, map.shape[1]-1),
+                             booleanMatrixToPointList(map))
+    half1, half2 = splitSegment(mapSegment)
     pass

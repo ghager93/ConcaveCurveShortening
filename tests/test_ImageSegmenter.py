@@ -1,7 +1,11 @@
 from unittest import TestCase
 from Vector2D import Vector2D
 from LoopSegment import LoopSegment
+from PIL import Image, ImageOps
 import ImageSegmenter
+from booleanFilter import MapArray
+import numpy as np
+
 
 class Test(TestCase):
     def test_split_segment_horizontally_left_segment(self):
@@ -43,3 +47,19 @@ class Test(TestCase):
 
         upper, lower = ImageSegmenter.splitSegmentVertically(segment)
         assert lower.topLeft == Vector2D(0, 6) and lower.bottomRight == Vector2D(6, 11)
+
+
+class Test(TestCase):
+    def test_segment_map(self):
+        dirname = 'bin/output_images/edge_detect/with_pad/'
+        filename = 'afghanistan-silhouette_circle_5_small'
+        extension = '.bmp'
+
+        image = Image.open('../' + dirname + filename + extension)
+        # image = ImageOps.invert(image)
+        image = image.convert("1")
+
+        map = np.array(image)
+
+        ImageSegmenter.segmentMap(map)
+

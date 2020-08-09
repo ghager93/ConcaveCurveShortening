@@ -35,13 +35,12 @@ def main():
     filename = 'afghanistan-silhouette_circle_5_small'
     extension = '.bmp'
 
-    outputDir = 'bin/output_images/edge_detect/'
+    outputDir = 'bin/output_images/edge_detect/with_pad/'
 
     image = Image.open(dirname + filename + extension)
     image = ImageOps.invert(image)
     image = image.convert("1")
-
-    imageArray = MapArray(np.array(image))
+    imageArray = MapArray(np.pad(np.array(image), (3, 3), 'constant', constant_values=(0, 0)))
 
     imageEdgeArray = xorEdgeDetect(imageArray)
 
