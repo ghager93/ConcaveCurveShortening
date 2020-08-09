@@ -48,8 +48,6 @@ class Test(TestCase):
         upper, lower = ImageSegmenter.splitSegmentVertically(segment)
         assert lower.topLeft == Vector2D(0, 6) and lower.bottomRight == Vector2D(6, 11)
 
-
-class Test(TestCase):
     def test_segment_map(self):
         dirname = 'bin/output_images/edge_detect/with_pad/'
         filename = 'afghanistan-silhouette_circle_5_small'
