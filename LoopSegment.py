@@ -59,8 +59,9 @@ class LoopSegment:
     #     return len(self.points) == len(set(p.x for p in self.points)) or \
     #            len(self.points) == len(set(p.y for p in self.points))
 
-    def pointsAreSubsetOfFunction(self):
-        return self.horizontalLinesAreConsecutive() or self.verticalLinesAreConsecutive()
+    def pointsAreFunction(self):
+        return not self.points or \
+               self.horizontalLinesAreConsecutive() or self.verticalLinesAreConsecutive()
 
     def horizontalLinesAreConsecutive(self):
         points = sorted(self.points, key=lambda p: p.y)
@@ -89,3 +90,17 @@ class LoopSegment:
                 return False
 
         return True
+
+    def pointsAreContinuous(self):
+        return len(self.entryAndExits()) <= 2
+
+    def pointsAreContinuousFunction(self):
+        return self.pointsAreContinuous() and self.pointsAreFunction()
+
+    def asOutlinedMatrix(self):
+        matrix = self.asMatrix()
+        matrix[0, :] = True
+        matrix[:, 0] = True
+        matrix[-1, :] = True
+        matrix[:, -1] = True
+        return matrix

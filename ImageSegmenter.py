@@ -36,5 +36,26 @@ def splitSegmentVertically(segment: LoopSegment):
 def segmentMap(map: np.ndarray):
     mapSegment = LoopSegment(Vector2D(0, 0), Vector2D(map.shape[0]-1, map.shape[1]-1),
                              booleanMatrixToPointList(map))
-    half1, half2 = splitSegment(mapSegment)
-    pass
+    segments = list()
+    stack = list()
+    stack.append(mapSegment)
+    while stack:
+        curr = stack.pop()
+        half1, half2 = splitSegment(curr)
+        if half1.pointsAreContinuousFunction():
+            segments.append(half1)
+        else:
+            stack.append(half1)
+
+        if half2.pointsAreContinuousFunction():
+            segments.append(half2)
+        else:
+            stack.append(half2)
+
+    segmentedMatrix = np.full(map.shape, False)
+    for segment in segments:
+        segmentedMatrix[segment.topLeft.x:segment.bottomRight.x+1,
+        segment.topLeft.y:segment.bottomRight.y+1] = segment.asOutlinedMatrix()
+
+    plt.imshow(segmentedMatrix)
+    plt.show()
