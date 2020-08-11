@@ -5,6 +5,7 @@ from PIL import Image, ImageOps
 import ImageSegmenter
 from booleanFilter import MapArray
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class Test(TestCase):
@@ -59,5 +60,12 @@ class Test(TestCase):
 
         map = np.array(image)
 
-        ImageSegmenter.segmentMap(map)
+        segments = ImageSegmenter.segmentMap(map)
 
+        segmentedMatrix = np.full(map.shape, False)
+        for segment in segments:
+            segmentedMatrix[segment.topLeft.x:segment.bottomRight.x+1,
+            segment.topLeft.y:segment.bottomRight.y+1] = segment.asOutlinedMatrix()
+
+        plt.imshow(segmentedMatrix)
+        plt.show()

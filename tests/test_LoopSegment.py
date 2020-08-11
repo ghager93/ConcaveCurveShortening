@@ -51,3 +51,16 @@ class TestLoopSegment(TestCase):
     def test_vertical_lines_are_consecutive_false(self):
         pointList = [Vector2D(0, 0), Vector2D(1, 0), Vector2D(1, 2), Vector2D(2, 3), Vector2D(3, 3), Vector2D(5, 0)]
         assert not LoopSegment.LoopSegment(None, None, pointList).horizontalLinesAreConsecutive()
+
+    def test_is_neighbour_on_right_side_true(self):
+        neighbourPoints = [Vector2D(6, 1), Vector2D(7, 3)]
+        neighbour = LoopSegment.LoopSegment(Vector2D(6, 1), Vector2D(7, 7), neighbourPoints)
+        assert self.segment.isNeighbour(neighbour)
+
+    def test_is_neighbour_on_right_side_false(self):
+        neighbourPoints = [Vector2D(6, 7), Vector2D(7, 3)]
+        neighbour = LoopSegment.LoopSegment(Vector2D(6, 1), Vector2D(7, 7), neighbourPoints)
+
+    def test_is_neighbour_on_top_side_true(self):
+        neighbourPoints = [Vector2D(1, -3), Vector2D(1, -1)]
+        neighbour = LoopSegment.LoopSegment(Vector2D(0, -5), Vector2D(5, -1), neighbourPoints)

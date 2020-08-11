@@ -52,13 +52,7 @@ def segmentMap(map: np.ndarray):
         else:
             stack.append(half2)
 
-    segmentedMatrix = np.full(map.shape, False)
-    for segment in segments:
-        segmentedMatrix[segment.topLeft.x:segment.bottomRight.x+1,
-        segment.topLeft.y:segment.bottomRight.y+1] = segment.asOutlinedMatrix()
-
-    plt.imshow(segmentedMatrix)
-    plt.show()
+    return segments
 
 
 def makeSegmentGraph(segments: List[LoopSegment]):
