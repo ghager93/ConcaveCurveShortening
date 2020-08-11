@@ -6,9 +6,20 @@ import ImageSegmenter
 from booleanFilter import MapArray
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 
 class Test(TestCase):
+    dirname = 'bin/output_images/edge_detect/with_pad/'
+    filename = 'afghanistan-silhouette_circle_5_small'
+    extension = '.bmp'
+
+    image = Image.open('../' + dirname + filename + extension)
+    # image = ImageOps.invert(image)
+    image = image.convert("1")
+
+    map = np.array(image)
+
     def test_split_segment_horizontally_left_segment(self):
         topLeft = Vector2D(0, 0)
         bottomRight = Vector2D(10, 6)
@@ -50,19 +61,16 @@ class Test(TestCase):
         assert lower.topLeft == Vector2D(0, 6) and lower.bottomRight == Vector2D(6, 11)
 
     def test_segment_map(self):
-        dirname = 'bin/output_images/edge_detect/with_pad/'
-        filename = 'afghanistan-silhouette_circle_5_small'
-        extension = '.bmp'
+        segments = ImageSegmenter.segmentMap(self.map)
 
-        image = Image.open('../' + dirname + filename + extension)
-        # image = ImageOps.invert(image)
-        image = image.convert("1")
+        f = open('segment_map_test', 'w+')
+        for segment in segments:
+            f.write(str(segment.topLeft._asdict()) + '\n')
+            f.write(str(segment.bottomRight._asdict()) + '\n')
+            f.write(str([p._asdict() for p in segment.points]) + '\n')
+        f.close()
 
-        map = np.array(image)
-
-        segments = ImageSegmenter.segmentMap(map)
-
-        segmentedMatrix = np.full(map.shape, False)
+        segmentedMatrix = np.full(self.map.shape, False)
         for segment in segments:
             segmentedMatrix[segment.topLeft.x:segment.bottomRight.x+1,
             segment.topLeft.y:segment.bottomRight.y+1] = segment.asOutlinedMatrix()
