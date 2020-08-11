@@ -15,8 +15,20 @@ class LoopSegment:
         return [p for p in self.points if self.onEdge(p)]
 
     def onEdge(self, point: Vector2D):
-        return point.x == self.topLeft.x or point.y == self.topLeft.y or \
-               point.x == self.bottomRight.x or point.y == self.bottomRight.y
+        return self.onTopEdge(point) or self.onBottomEdge(point) or \
+               self.onLeftEdge(point) or self.onRightEdge(point)
+
+    def onTopEdge(self, point: Vector2D):
+        return point.y == self.topLeft.y
+
+    def onBottomEdge(self, point: Vector2D):
+        return point.y == self.bottomRight.y
+
+    def onLeftEdge(self, point: Vector2D):
+        return point.x == self.topLeft.x
+
+    def onRightEdge(self, point: Vector2D):
+        return point.x == self.bottomRight.x
 
     @staticmethod
     def mergeNeighbouringPoints(points: List[Vector2D]):
@@ -104,3 +116,13 @@ class LoopSegment:
         matrix[-1, :] = True
         matrix[:, -1] = True
         return matrix
+
+    def isNeighbour(self, segment):
+        # for p1 in self.edgePoints():
+        #     for p2 in segment.edgePoints():
+        #         if p1.manhattanDistanceTo(p2) == 1:
+        #             return True
+        # return False
+
+        return any([p1.manhattanDistanceTo(p2) == 1 for p2 in segment.edgePoints()
+                    for p1 in self.edgePoints()])
