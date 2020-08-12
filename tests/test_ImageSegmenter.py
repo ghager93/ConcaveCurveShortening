@@ -6,8 +6,9 @@ import ImageSegmenter
 from booleanFilter import MapArray
 import numpy as np
 import matplotlib.pyplot as plt
-import os
-
+import json
+import jsons
+import pickle
 
 class Test(TestCase):
     dirname = 'bin/output_images/edge_detect/with_pad/'
@@ -64,11 +65,17 @@ class Test(TestCase):
         segments = ImageSegmenter.segmentMap(self.map)
 
         f = open('segment_map_test', 'w+')
-        for segment in segments:
-            f.write(str(segment.topLeft._asdict()) + '\n')
-            f.write(str(segment.bottomRight._asdict()) + '\n')
-            f.write(str([p._asdict() for p in segment.points]) + '\n')
+        # for segment in segments:
+        #     f.write(json.dumps(segment.topLeft._asdict()))
+        #     f.write(json.dumps(segment.bottomRight._asdict()))
+        #     f.write(str([json.dumps(p._asdict()) for p in segment.points]))
+        # f.close()
+        with open('segment_map_test.pkl', 'wb') as output:
+            pickle.dump(segments, output, -1)
         f.close()
+
+        with open('segment_map_test.pkl', 'rb') as input:
+            segmentsReload = pickle.load(input)
 
         segmentedMatrix = np.full(self.map.shape, False)
         for segment in segments:
