@@ -6,8 +6,7 @@ import ImageSegmenter
 from booleanFilter import MapArray
 import numpy as np
 import matplotlib.pyplot as plt
-import os
-
+import pickle
 
 class Test(TestCase):
     dirname = 'bin/output_images/edge_detect/with_pad/'
@@ -63,12 +62,21 @@ class Test(TestCase):
     def test_segment_map(self):
         segments = ImageSegmenter.segmentMap(self.map)
 
-        f = open('segment_map_test', 'w+')
-        for segment in segments:
-            f.write(str(segment.topLeft._asdict()) + '\n')
-            f.write(str(segment.bottomRight._asdict()) + '\n')
-            f.write(str([p._asdict() for p in segment.points]) + '\n')
-        f.close()
+        with open('segment_map_test.pkl', 'rb') as file:
+            correct = pickle.load(file)
+
+        assert set(segments) == set(correct)
+        # segmentedMatrix = np.full(self.map.shape, False)
+        # for segment in segments:
+        #     segmentedMatrix[segment.topLeft.x:segment.bottomRight.x+1,
+        #     segment.topLeft.y:segment.bottomRight.y+1] = segment.asOutlinedMatrix()
+        #
+        # plt.imshow(segmentedMatrix)
+        # plt.show()
+
+    def test_find_neighbours(self):
+        with open('segment_map_test.pkl', 'rb') as file:
+            segments = pickle.load(file)
 
         segmentedMatrix = np.full(self.map.shape, False)
         for segment in segments:
@@ -76,4 +84,5 @@ class Test(TestCase):
             segment.topLeft.y:segment.bottomRight.y+1] = segment.asOutlinedMatrix()
 
         plt.imshow(segmentedMatrix)
-        plt.show()
+        pass
+
