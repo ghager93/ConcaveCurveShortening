@@ -62,13 +62,6 @@ def makeSegmentGraph(segments: List[LoopSegment]):
 
 
 def findNeighbours(segments: List[LoopSegment], segment: LoopSegment):
-    # neighbours = set()
-    # if segment.points:
-    #     for j, neighbour in enumerate(segments):
-    #         if isNeighbour(segment, neighbour):
-    #             neighbours.add(j)
-
     if not segment.points:
         return set()
     return {j for j, n in enumerate(segments) if segment.isNeighbour(n)}
-

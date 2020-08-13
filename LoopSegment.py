@@ -124,13 +124,23 @@ class LoopSegment:
         matrix[:, -1] = True
         return matrix
 
-    def isNeighbour(self, segment):
-        # for p1 in self.edgePoints():
-        #     for p2 in segment.edgePoints():
-        #         if p1.manhattanDistanceTo(p2) == 1:
-        #             return True
-        # return False
-        if segment == self:
+    def isNeighbour(self, other: 'LoopSegment'):
+        selfBorderPoints = set()
+        otherBorderPoints = set()
+        if other == self:
             return False
-        return any([p1.manhattanDistanceTo(p2) == 1 for p2 in segment.edgePoints()
-                    for p1 in self.edgePoints()])
+        if self.topLeft.x == other.bottomRight.x + 1:
+            selfBorderPoints = {p for p in self.points if self.onLeftEdge(p)}
+            otherBorderPoints = {p for p in other.points if other.onRightEdge(p)}
+        if self.topLeft.y == other.bottomRight.y + 1:
+            selfBorderPoints = {p for p in self.points if self.onTopEdge(p)}
+            otherBorderPoints = {p for p in other.points if other.onBottomEdge(p)}
+        if self.bottomRight.x == other.topLeft.x - 1:
+            selfBorderPoints = {p for p in self.points if self.onRightEdge(p)}
+            otherBorderPoints = {p for p in other.points if other.onLeftEdge(p)}
+        if self.bottomRight.y == other.topLeft.y - 1:
+            selfBorderPoints = {p for p in self.points if self.onBottomEdge(p)}
+            otherBorderPoints = {p for p in other.points if other.onTopEdge(p)}
+
+        return any([p1.manhattanDistanceTo(p2) == 1 for p2 in otherBorderPoints
+                    for p1 in selfBorderPoints])
