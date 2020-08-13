@@ -124,6 +124,14 @@ class LoopSegment:
         matrix[:, -1] = True
         return matrix
 
+    def boundaryMatrix(self):
+        matrix = np.full((self.width(), self.height()), False)
+        matrix[0, :] = True
+        matrix[:, 0] = True
+        matrix[-1, :] = True
+        matrix[:, -1] = True
+        return matrix
+
     def isNeighbour(self, other: 'LoopSegment'):
         selfBorderPoints = set()
         otherBorderPoints = set()

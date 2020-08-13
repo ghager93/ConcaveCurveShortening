@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import pickle
 import time
 
+
 class Test(TestCase):
     dirname = 'bin/output_images/edge_detect/with_pad/'
     filename = 'afghanistan-silhouette_circle_5_small'
@@ -79,10 +80,13 @@ class Test(TestCase):
         with open('segment_map_test.pkl', 'rb') as file:
             segments = pickle.load(file)
 
-        start1 = time.time()
-        for i in range(5):
-            segmentNeighbours = [ImageSegmenter.findNeighbours(segments, s) for s in segments]
-        end1 = time.time()
+        segmentNeighbours = [ImageSegmenter.findNeighbours(segments, s) for s in segments]
 
-        print('time 1', end1 - start1)
+        segmentedMatrix = np.full(self.map.shape, 0)
+        for segment in segments:
+            segmentedMatrix[segment.topLeft.x:segment.bottomRight.x + 1,
+            segment.topLeft.y:segment.bottomRight.y + 1] += segment.asMatrix().astype(int) \
+                                                            + 2*segment.boundaryMatrix().astype(int)
 
+        plt.imshow(segmentedMatrix)
+        plt.show()
