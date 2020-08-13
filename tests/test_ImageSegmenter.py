@@ -6,8 +6,6 @@ import ImageSegmenter
 from booleanFilter import MapArray
 import numpy as np
 import matplotlib.pyplot as plt
-import json
-import jsons
 import pickle
 
 class Test(TestCase):
@@ -64,18 +62,21 @@ class Test(TestCase):
     def test_segment_map(self):
         segments = ImageSegmenter.segmentMap(self.map)
 
-        f = open('segment_map_test', 'w+')
-        # for segment in segments:
-        #     f.write(json.dumps(segment.topLeft._asdict()))
-        #     f.write(json.dumps(segment.bottomRight._asdict()))
-        #     f.write(str([json.dumps(p._asdict()) for p in segment.points]))
-        # f.close()
-        with open('segment_map_test.pkl', 'wb') as output:
-            pickle.dump(segments, output, -1)
-        f.close()
+        with open('segment_map_test.pkl', 'rb') as file:
+            correct = pickle.load(file)
 
-        with open('segment_map_test.pkl', 'rb') as input:
-            segmentsReload = pickle.load(input)
+        assert set(segments) == set(correct)
+        # segmentedMatrix = np.full(self.map.shape, False)
+        # for segment in segments:
+        #     segmentedMatrix[segment.topLeft.x:segment.bottomRight.x+1,
+        #     segment.topLeft.y:segment.bottomRight.y+1] = segment.asOutlinedMatrix()
+        #
+        # plt.imshow(segmentedMatrix)
+        # plt.show()
+
+    def test_find_neighbours(self):
+        with open('segment_map_test.pkl', 'rb') as file:
+            segments = pickle.load(file)
 
         segmentedMatrix = np.full(self.map.shape, False)
         for segment in segments:
@@ -83,4 +84,5 @@ class Test(TestCase):
             segment.topLeft.y:segment.bottomRight.y+1] = segment.asOutlinedMatrix()
 
         plt.imshow(segmentedMatrix)
-        plt.show()
+        pass
+

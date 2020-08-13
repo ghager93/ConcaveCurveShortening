@@ -8,6 +8,13 @@ class LoopSegment:
         self.bottomRight = bottomRight
         self.points = points
 
+    def __eq__(self, other):
+        if not isinstance(other, LoopSegment):
+            return False
+        return other.topLeft == self.topLeft and \
+               other.bottomRight == self.bottomRight and \
+               other.points == self.points
+
     def entryAndExits(self):
         return self.mergeNeighbouringPoints(self.edgePoints())
 
@@ -123,6 +130,7 @@ class LoopSegment:
         #         if p1.manhattanDistanceTo(p2) == 1:
         #             return True
         # return False
-
+        if segment == self:
+            return False
         return any([p1.manhattanDistanceTo(p2) == 1 for p2 in segment.edgePoints()
                     for p1 in self.edgePoints()])
