@@ -2,7 +2,7 @@ from LoopSegment import LoopSegment
 from Vector2D import Vector2D
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import List
+from typing import List, Dict
 from booleanMatrixToPointList import booleanMatrixToPointList
 
 
@@ -58,10 +58,33 @@ def segmentMap(map: np.ndarray):
 def makeSegmentGraph(segments: List[LoopSegment]):
     adjacencyList = dict()
     for i, segment in enumerate(segments):
-        neighbours = findNeighbours(segments, segment)
+        adjacencyList[i] = findNeighbours(segments, segment)
+
+    return adjacencyList
 
 
 def findNeighbours(segments: List[LoopSegment], segment: LoopSegment):
     if not segment.points:
         return set()
     return {j for j, n in enumerate(segments) if segment.isNeighbour(n)}
+
+
+def findGraphLoops(adjacencyList: Dict[int, List[int]]):
+    loops = list()
+    visited = set()
+    for segment in adjacencyList:
+        if segment not in visited and adjacencyList[segment]:
+            loop = list()
+            stack = list()
+            stack.append(segment)
+            visited.add(segment)
+            while stack:
+                segment = stack.pop()
+                loop.append(segment)
+                for neighbour in adjacencyList[segment]:
+                    if neighbour not in visited:
+                        stack.append(neighbour)
+                        visited.add(neighbour)
+            loops.append(loop)
+
+    return loops

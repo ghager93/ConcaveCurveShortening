@@ -83,21 +83,50 @@ class Test(TestCase):
 
         segmentNeighbours = [ImageSegmenter.findNeighbours(segments, s) for s in segments]
 
+        with open('find_neighbours_test.pkl', 'rb') as file:
+            segmentNeighboursCorrect = pickle.load(file)
+
+        assert segmentNeighbours == segmentNeighboursCorrect
+
+        # segmentedMatrix = np.zeros(self.map.shape, np.int8)
+        # for segment in segments:
+        #     segmentedMatrix[segment.topLeft.x:segment.bottomRight.x + 1,
+        #     segment.topLeft.y:segment.bottomRight.y + 1] += segment.asMatrix().astype(int) \
+        #                                                     + 2*segment.boundaryMatrix().astype(int)
+        #
+        # for i, neighbours in enumerate(segmentNeighbours):
+        #     neighbourScreen = np.zeros(self.map.shape, np.int8)
+        #     neighbourScreen[segments[i].topLeft.x:segments[i].bottomRight.x + 1,
+        #     segments[i].topLeft.y:segments[i].bottomRight.y + 1] += 2
+        #     for n in neighbours:
+        #         neighbourScreen[segments[n].topLeft.x:segments[n].bottomRight.x + 1,
+        #         segments[n].topLeft.y:segments[n].bottomRight.y + 1] += 1
+        #
+        #     segmentedMatrix += neighbourScreen
+        #     plt.imshow(segmentedMatrix)
+        #     plt.show()
+        #     segmentedMatrix -= neighbourScreen
+
+    def test_find_graph_loops(self):
+        with open('segment_map_test.pkl', 'rb') as file:
+            segments = pickle.load(file)
+
+        graph = ImageSegmenter.makeSegmentGraph(segments)
+        loops = ImageSegmenter.findGraphLoops(graph)
+
         segmentedMatrix = np.zeros(self.map.shape, np.int8)
         for segment in segments:
             segmentedMatrix[segment.topLeft.x:segment.bottomRight.x + 1,
             segment.topLeft.y:segment.bottomRight.y + 1] += segment.asMatrix().astype(int) \
                                                             + 2*segment.boundaryMatrix().astype(int)
 
-        for i, neighbours in enumerate(segmentNeighbours):
-            neighbourScreen = np.zeros(self.map.shape, np.int8)
-            neighbourScreen[segments[i].topLeft.x:segments[i].bottomRight.x + 1,
-            segments[i].topLeft.y:segments[i].bottomRight.y + 1] += 2
-            for n in neighbours:
-                neighbourScreen[segments[n].topLeft.x:segments[n].bottomRight.x + 1,
-                segments[n].topLeft.y:segments[n].bottomRight.y + 1] += 1
+        for loop in loops:
+            loopScreen = np.zeros(self.map.shape, np.int8)
+            for i in loop:
+                for p in segments[i].points:
+                    loopScreen[p.x, p.y] += 2
 
-            segmentedMatrix += neighbourScreen
+            segmentedMatrix += loopScreen
             plt.imshow(segmentedMatrix)
             plt.show()
-            segmentedMatrix -= neighbourScreen
+            segmentedMatrix -= loopScreen
