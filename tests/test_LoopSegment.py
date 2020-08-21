@@ -56,17 +56,17 @@ class TestLoopSegment(TestCase):
     def test_is_neighbour_on_right_side_true(self):
         neighbourPoints = [Vector2D(6, 1), Vector2D(7, 3)]
         neighbour = LoopSegment.LoopSegment(Vector2D(6, 1), Vector2D(7, 7), neighbourPoints)
-        assert self.segment.isNeighbour(neighbour)
+        assert self.segment.isNeighbourOf(neighbour)
 
     def test_is_neighbour_on_right_side_false(self):
         neighbourPoints = [Vector2D(6, 7), Vector2D(7, 3)]
         neighbour = LoopSegment.LoopSegment(Vector2D(6, 1), Vector2D(7, 7), neighbourPoints)
-        assert not self.segment.isNeighbour(neighbour)
+        assert not self.segment.isNeighbourOf(neighbour)
 
     def test_is_neighbour_on_top_side_true(self):
         neighbourPoints = [Vector2D(1, -3), Vector2D(1, -1)]
         neighbour = LoopSegment.LoopSegment(Vector2D(0, -5), Vector2D(5, -1), neighbourPoints)
-        assert self.segment.isNeighbour(neighbour)
+        assert self.segment.isNeighbourOf(neighbour)
 
     def test_is_neighbour_time(self):
         neighbourPoints = [Vector2D(x, 7) for x in range(1, 7)]
@@ -74,6 +74,6 @@ class TestLoopSegment(TestCase):
 
         start1 = time.time()
         for i in range(100):
-            assert not self.segment.isNeighbour(neighbour)
+            assert not self.segment.isNeighbourOf(neighbour)
         end1 = time.time()
         print('time 1', end1 - start1)

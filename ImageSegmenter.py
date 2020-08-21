@@ -1,36 +1,8 @@
-from LoopSegment import LoopSegment
+from LoopSegment import LoopSegment, splitSegment
 from Vector2D import Vector2D
 import numpy as np
-import matplotlib.pyplot as plt
 from typing import List, Dict
 from booleanMatrixToPointList import booleanMatrixToPointList
-
-
-def splitSegment(segment: LoopSegment):
-    if segment.width() > segment.height():
-        return splitSegmentHorizontally(segment)
-    else:
-        return splitSegmentVertically(segment)
-
-
-def splitSegmentHorizontally(segment: LoopSegment):
-    leftPoints = [p for p in segment.points if p.x <= segment.mid().x]
-    rightPoints = [p for p in segment.points if p.x > segment.mid().x]
-
-    leftSegment = LoopSegment(segment.topLeft, Vector2D(segment.mid().x, segment.bottomRight.y), leftPoints)
-    rightSegment = LoopSegment(Vector2D(segment.mid().x+1, segment.topLeft.y), segment.bottomRight, rightPoints)
-
-    return leftSegment, rightSegment
-
-
-def splitSegmentVertically(segment: LoopSegment):
-    upperPoints = [p for p in segment.points if p.y <= segment.mid().y]
-    lowerPoints = [p for p in segment.points if p.y > segment.mid().y]
-
-    upperSegment = LoopSegment(segment.topLeft, Vector2D(segment.bottomRight.x, segment.mid().y), upperPoints)
-    lowerSegment = LoopSegment(Vector2D(segment.topLeft.x, segment.mid().y+1), segment.bottomRight, lowerPoints)
-
-    return upperSegment, lowerSegment
 
 
 def segmentMap(map: np.ndarray):
@@ -55,36 +27,39 @@ def segmentMap(map: np.ndarray):
     return segments
 
 
-def makeSegmentGraph(segments: List[LoopSegment]):
-    adjacencyList = dict()
-    for i, segment in enumerate(segments):
-        adjacencyList[i] = findNeighbours(segments, segment)
+class SegmentGraph:
+    def __init__(self, segments: List[LoopSegment]):
+        self.segments = segments
+        self.adjacencyList = self.makeAdjacencyList()
 
-    return adjacencyList
+    def makeAdjacencyList(self):
+        adjacencyList = dict()
+        for i, segment in enumerate(self.segments):
+            adjacencyList[i] = self.findNeighboursOf(segment)
 
+        return adjacencyList
 
-def findNeighbours(segments: List[LoopSegment], segment: LoopSegment):
-    if not segment.points:
-        return set()
-    return {j for j, n in enumerate(segments) if segment.isNeighbour(n)}
+    def findNeighboursOf(self, segment: LoopSegment):
+        if not segment.points:
+            return set()
+        return {j for j, n in enumerate(self.segments) if segment.isNeighbourOf(n)}
 
+    def findGraphLoops(self):
+        loops = list()
+        visited = set()
+        for segment in self.adjacencyList:
+            if segment not in visited and self.adjacencyList[segment]:
+                loop = list()
+                stack = list()
+                stack.append(segment)
+                visited.add(segment)
+                while stack:
+                    segment = stack.pop()
+                    loop.append(segment)
+                    for neighbour in self.adjacencyList[segment]:
+                        if neighbour not in visited:
+                            stack.append(neighbour)
+                            visited.add(neighbour)
+                loops.append(loop)
 
-def findGraphLoops(adjacencyList: Dict[int, List[int]]):
-    loops = list()
-    visited = set()
-    for segment in adjacencyList:
-        if segment not in visited and adjacencyList[segment]:
-            loop = list()
-            stack = list()
-            stack.append(segment)
-            visited.add(segment)
-            while stack:
-                segment = stack.pop()
-                loop.append(segment)
-                for neighbour in adjacencyList[segment]:
-                    if neighbour not in visited:
-                        stack.append(neighbour)
-                        visited.add(neighbour)
-            loops.append(loop)
-
-    return loops
+        return loops

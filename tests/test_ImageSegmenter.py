@@ -1,4 +1,6 @@
 from unittest import TestCase
+
+import LoopSegment
 from Vector2D import Vector2D
 from LoopSegment import LoopSegment
 from PIL import Image, ImageOps
@@ -29,7 +31,7 @@ class Test(TestCase):
                      Vector2D(2, 5)]
         segment = LoopSegment(topLeft, bottomRight, pointList)
 
-        left, right = ImageSegmenter.splitSegmentHorizontally(segment)
+        left, right = segment.splitSegmentHorizontally()
         assert left.topLeft == Vector2D(0, 0) and left.bottomRight == Vector2D(5, 6)
 
     def test_split_segment_horizontally_right_segment(self):
@@ -39,7 +41,7 @@ class Test(TestCase):
                      Vector2D(2, 5)]
         segment = LoopSegment(topLeft, bottomRight, pointList)
 
-        left, right = ImageSegmenter.splitSegmentHorizontally(segment)
+        left, right = segment.splitSegmentHorizontally()
         assert right.topLeft == Vector2D(6, 0) and right.bottomRight == Vector2D(10, 6)
 
     def test_split_segment_vertically_upper_segment(self):
@@ -49,7 +51,7 @@ class Test(TestCase):
                      Vector2D(2, 5)]
         segment = LoopSegment(topLeft, bottomRight, pointList)
 
-        upper, lower = ImageSegmenter.splitSegmentVertically(segment)
+        upper, lower = segment.splitSegmentVertically()
         assert upper.topLeft == Vector2D(0, 0) and upper.bottomRight == Vector2D(6, 5)
 
     def test_split_segment_vertically_lower_segment(self):
@@ -59,7 +61,7 @@ class Test(TestCase):
                      Vector2D(2, 5)]
         segment = LoopSegment(topLeft, bottomRight, pointList)
 
-        upper, lower = ImageSegmenter.splitSegmentVertically(segment)
+        upper, lower = segment.splitSegmentVertically()
         assert lower.topLeft == Vector2D(0, 6) and lower.bottomRight == Vector2D(6, 11)
 
     def test_segment_map(self):
@@ -81,7 +83,8 @@ class Test(TestCase):
         with open('segment_map_test.pkl', 'rb') as file:
             segments = pickle.load(file)
 
-        segmentNeighbours = [ImageSegmenter.findNeighbours(segments, s) for s in segments]
+        segmentGraph = ImageSegmenter.SegmentGraph(segments)
+        segmentNeighbours = [segmentGraph.findNeighboursOf(s) for s in segments]
 
         with open('find_neighbours_test.pkl', 'rb') as file:
             segmentNeighboursCorrect = pickle.load(file)
@@ -111,8 +114,8 @@ class Test(TestCase):
         with open('segment_map_test.pkl', 'rb') as file:
             segments = pickle.load(file)
 
-        graph = ImageSegmenter.makeSegmentGraph(segments)
-        loops = ImageSegmenter.findGraphLoops(graph)
+        segmentGraph = ImageSegmenter.SegmentGraph(segments)
+        loops = segmentGraph.findGraphLoops()
 
         segmentedMatrix = np.zeros(self.map.shape, np.int8)
         for segment in segments:

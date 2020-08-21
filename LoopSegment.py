@@ -132,7 +132,7 @@ class LoopSegment:
         matrix[:, -1] = True
         return matrix
 
-    def isNeighbour(self, other: 'LoopSegment'):
+    def isNeighbourOf(self, other: 'LoopSegment'):
         selfBorderPoints = set()
         otherBorderPoints = set()
         if other == self:
@@ -152,3 +152,30 @@ class LoopSegment:
 
         return any([p1.manhattanDistanceTo(p2) == 1 for p2 in otherBorderPoints
                     for p1 in selfBorderPoints])
+
+
+    def splitSegment(self):
+        if self.width() > self.height():
+            return self.splitSegmentHorizontally()
+        else:
+            return self.splitSegmentVertically()
+
+
+    def splitSegmentHorizontally(self):
+        leftPoints = [p for p in self.points if p.x <= self.mid().x]
+        rightPoints = [p for p in self.points if p.x > self.mid().x]
+
+        leftSegment = LoopSegment(self.topLeft, Vector2D(self.mid().x, self.bottomRight.y), leftPoints)
+        rightSegment = LoopSegment(Vector2D(self.mid().x+1, self.topLeft.y), self.bottomRight, rightPoints)
+
+        return leftSegment, rightSegment
+
+
+    def splitSegmentVertically(self):
+        upperPoints = [p for p in self.points if p.y <= self.mid().y]
+        lowerPoints = [p for p in self.points if p.y > self.mid().y]
+
+        upperSegment = LoopSegment(self.topLeft, Vector2D(self.bottomRight.x, self.mid().y), upperPoints)
+        lowerSegment = LoopSegment(Vector2D(self.topLeft.x, self.mid().y+1), self.bottomRight, lowerPoints)
+
+        return upperSegment, lowerSegment
