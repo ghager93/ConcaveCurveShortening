@@ -2,7 +2,7 @@ from LoopSegment import LoopSegment, splitSegment
 from Vector2D import Vector2D
 import numpy as np
 from typing import List, Dict
-from booleanMatrixToPointList import booleanMatrixToPointList
+from matrixOps import booleanMatrixToPointList
 
 
 def segmentMap(map: np.ndarray):

@@ -5,7 +5,7 @@ from PIL import Image, ImageOps
 from booleanFilter import MapArray
 from xorEdgeDetect import xorEdgeDetect
 from Vector2D import Vector2D
-from booleanMatrixToPointList import booleanMatrixToPointList
+from matrixOps import booleanMatrixToPointList
 
 
 def neighbouringPoints(pointList):
