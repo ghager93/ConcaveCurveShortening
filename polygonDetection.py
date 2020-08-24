@@ -36,16 +36,16 @@ def floodFill(matrix):
             while stack:
                 curr = stack.pop()
                 loop.append(curr)
-                unvisitedNeighbours = unvisitedNeighbours(matrix, curr, visited)
-                stack.append(unvisitedNeighbours)
-                visited.add(unvisitedNeighbours)
+                unvisitedNeighbours = getUnvisitedNeighbours(matrix, curr, visited)
+                stack += unvisitedNeighbours
+                visited.update(unvisitedNeighbours)
 
             loops.append(loop)
 
     return loops
 
 
-def unvisitedNeighbours(matrix, curr, visited):
+def getUnvisitedNeighbours(matrix, curr, visited):
     neighbours = [curr + (1, 0), curr + (0, 1), curr + (-1, 0), curr + (0, -1)]
 
     return [n for n in neighbours if indexIsWithinMatrix(n, matrix)

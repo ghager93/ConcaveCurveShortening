@@ -11,4 +11,4 @@ class Test(TestCase):
         matrix = np.array([[1, 1, 0, 0],
                            [1, 1, 0, 0],
                            [0, 0, 0, 0]])
-        assert polygonDetection.unvisitedNeighbours(matrix, curr, visited) == [Vector2D(1, 1)]
+        assert polygonDetection.getUnvisitedNeighbours(matrix, curr, visited) == [Vector2D(1, 1)]

@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
 from matplotlib import pyplot as plt
 from imageMatrixOps import ImageMatrixOps
+import polygonDetection
 
 from Vector2D import Vector2D
 import math
@@ -11,31 +12,14 @@ import math
 class ImageMatrix(ImageMatrixOps):
     def __init__(self, matrix: np.ndarray = None):
         self.matrix = matrix
+        self.polygons = self.getPolygons()
 
-    def width(self):
-        return self.matrix.shape[0]
-
-    def height(self):
-        return self.matrix.shape[1]
-
-    def toImage(self):
-        return Image.fromarray(self.matrix).convert("L")
-
-    def asBoolean(self):
-        return self.matrix > 0
-
-    def show(self):
-        plt.imshow(self.matrix)
-        plt.show()
-
-    def asRatioOf(self, array2):
-        return self.countFalse() / array2.countFalse()
-
-    def countFalse(self):
-        return self.matrix.size - np.count_nonzero(self.matrix)
+    @staticmethod
+    def open(path: str):
+        return ImageMatrix(ImageMatrix.openImageAsBooleanMatrix(path))
 
     def getPolygons(self):
-        pass
+        return polygonDetection.floodFill(self.xorEdgeDetect())
 
 
 class PaddedImageMatrix(ImageMatrix):
@@ -52,3 +36,13 @@ class PaddedImageMatrix(ImageMatrix):
 
     def paddedBooleanArray(self):
         return self.paddedArray() > 0
+
+
+def main():
+    path = 'bin/output_images/small/afghanistan-silhouette_circle_5_small.bmp'
+    im = ImageMatrix.open(path)
+    pass
+
+
+if __name__ == '__main__':
+    main()

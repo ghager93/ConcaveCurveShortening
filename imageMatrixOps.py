@@ -25,6 +25,28 @@ class ImageMatrixOps:
 
         return horizontalEdgeArray | verticalEdgeArray
 
+    def width(self):
+        return self.matrix.shape[0]
+
+    def height(self):
+        return self.matrix.shape[1]
+
+    def toImage(self):
+        return Image.fromarray(self.matrix).convert("L")
+
+    def asBoolean(self):
+        return self.matrix > 0
+
+    def show(self):
+        plt.imshow(self.matrix)
+        plt.show()
+
+    def asRatioOf(self, matrix2):
+        return self.countFalse() / matrix2.countFalse()
+
+    def countFalse(self):
+        return self.matrix.size - np.count_nonzero(self.matrix)
+
     @staticmethod
     def openImageAsBooleanMatrix(imagePath: str):
         return np.array(ImageOps.invert(Image.open(imagePath)).convert("1"))
