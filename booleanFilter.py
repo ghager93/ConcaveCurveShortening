@@ -18,7 +18,7 @@ class BooleanFilter:
         paddedMapArray = PaddedImageMatrix(mapArray, self.filter.shape[0])
         booleanArray = paddedMapArray.paddedBooleanArray()
         filteredArray = np.full(booleanArray.shape, True)
-        for ix, iy in np.ndindex(paddedMapArray.array.shape):
+        for ix, iy in np.ndindex(paddedMapArray.matrix.shape):
             if self.isSubtractive(booleanArray[ix:ix + self.filter.shape[0], iy:iy + self.filter.shape[1]]):
                 self.subtractFilter(filteredArray[ix:ix + self.filter.shape[0], iy:iy + self.filter.shape[1]])
 

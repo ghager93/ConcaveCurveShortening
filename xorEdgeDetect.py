@@ -19,7 +19,7 @@ def main():
 
     imageEdgeArray = xorEdgeDetect(imageArray)
 
-    spreadImageEdgeArray = ImageMatrix(spreadPoints(imageEdgeArray.array, 2), imageEdgeArray.pad)
+    spreadImageEdgeArray = ImageMatrix(spreadPoints(imageEdgeArray.matrix, 2), imageEdgeArray.pad)
 
     spreadImageEdge = spreadImageEdgeArray.toImage()
     spreadImageEdge.save(outputDir + filename + extension)

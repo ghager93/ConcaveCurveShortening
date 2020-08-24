@@ -25,12 +25,12 @@ def main():
     # pointList = [Vector2D(x, y)
     #              for x in range(sparseMap.shape[0])
     #              for y in sparseMap.indices[sparseMap.indptr[x]:sparseMap.indptr[x+1]]]
-    pointList = booleanMatrixToPointList(edgeDetectedMap.array)
+    pointList = booleanMatrixToPointList(edgeDetectedMap.matrix)
 
     polygons = neighbouringPoints(pointList)
     imList = list()
     for polygon in polygons:
-        polygonMap = np.full(map.array.shape, False)
+        polygonMap = np.full(map.matrix.shape, False)
         for point in polygon:
             polygonMap[point.x, point.y] = True
         imList.append(plt.imshow(polygonMap))

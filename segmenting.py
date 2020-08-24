@@ -2,44 +2,45 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
 from matplotlib import pyplot as plt
+from imageMatrixOps import ImageMatrixOps
 
 from Vector2D import Vector2D
 import math
 
 
-class ImageMatrix:
-    def __init__(self, array: np.ndarray = None):
-        self.array = array
+class ImageMatrix(ImageMatrixOps):
+    def __init__(self, matrix: np.ndarray = None):
+        self.matrix = matrix
 
     def width(self):
-        return self.array.shape[0]
+        return self.matrix.shape[0]
 
     def height(self):
-        return self.array.shape[1]
+        return self.matrix.shape[1]
 
     def toImage(self):
-        return Image.fromarray(self.array).convert("L")
+        return Image.fromarray(self.matrix).convert("L")
 
     def asBoolean(self):
-        return self.array > 0
+        return self.matrix > 0
 
     def show(self):
-        plt.imshow(self.array)
+        plt.imshow(self.matrix)
         plt.show()
 
     def asRatioOf(self, array2):
         return self.countFalse() / array2.countFalse()
 
     def countFalse(self):
-        return self.array.size - np.count_nonzero(self.array)
+        return self.matrix.size - np.count_nonzero(self.matrix)
 
     def getPolygons(self):
-
+        pass
 
 
 class PaddedImageMatrix(ImageMatrix):
-    def __init__(self, array: np.ndarray = None, pad: int = 0):
-        super().__init__(array)
+    def __init__(self, matrix: np.ndarray = None, pad: int = 0):
+        super().__init__(matrix)
         self.pad = pad
 
     def __init__(self, mapArray: ImageMatrix, pad: int = 0):
@@ -47,7 +48,7 @@ class PaddedImageMatrix(ImageMatrix):
         self.pad = pad
 
     def paddedArray(self):
-        return np.pad(self.array, (self.pad, self.pad), 'constant', constant_values=(0, 0))
+        return np.pad(self.matrix, (self.pad, self.pad), 'constant', constant_values=(0, 0))
 
     def paddedBooleanArray(self):
         return self.paddedArray() > 0
