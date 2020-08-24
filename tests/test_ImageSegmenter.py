@@ -5,7 +5,7 @@ from Vector2D import Vector2D
 from LoopSegment import LoopSegment
 from PIL import Image, ImageOps
 import ImageSegmenter
-from booleanFilter import MapArray
+from segmenting import ImageMatrix
 import numpy as np
 import matplotlib.pyplot as plt
 import pickle

@@ -2,17 +2,17 @@ import numpy as np
 from scipy.sparse import csr_matrix
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
-from booleanFilter import MapArray
+from segmenting import ImageMatrix
 
 
-def xorEdgeDetect(map: MapArray):
+def xorEdgeDetect(map: ImageMatrix):
     if not map.pad:
         map.padArray(1)
 
     horizontalEdgeArray = xorArrays(map.array[:-1, 1:], map.array[1:, 1:])
     verticalEdgeArray = xorArrays(map.array[1:, :-1], map.array[1:, 1:])
 
-    return MapArray(horizontalEdgeArray | verticalEdgeArray, map.pad)
+    return ImageMatrix(horizontalEdgeArray | verticalEdgeArray, map.pad)
 
 
 def xorArrays(array1: np.ndarray, array2: np.ndarray):
@@ -40,11 +40,11 @@ def main():
     image = Image.open(dirname + filename + extension)
     image = ImageOps.invert(image)
     image = image.convert("1")
-    imageArray = MapArray(np.pad(np.array(image), (3, 3), 'constant', constant_values=(0, 0)))
+    imageArray = ImageMatrix(np.pad(np.array(image), (3, 3), 'constant', constant_values=(0, 0)))
 
     imageEdgeArray = xorEdgeDetect(imageArray)
 
-    spreadImageEdgeArray = MapArray(spreadPoints(imageEdgeArray.array, 2), imageEdgeArray.pad)
+    spreadImageEdgeArray = ImageMatrix(spreadPoints(imageEdgeArray.array, 2), imageEdgeArray.pad)
 
     spreadImageEdge = spreadImageEdgeArray.toImage()
     spreadImageEdge.save(outputDir + filename + extension)

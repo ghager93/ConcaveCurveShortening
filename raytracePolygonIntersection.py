@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
 from Vector2D import Vector2D
 import math
-import matrixOps
+import imageMatrixOps
 
 
 polygonMatrix = None
@@ -93,7 +93,7 @@ def main():
     extension = '.bmp'
 
     global polygonMatrix
-    polygonMatrix = matrixOps.openImageAsBooleanMatrix(dirname + filename + extension)
+    polygonMatrix = imageMatrixOps.openImageAsBooleanMatrix(dirname + filename + extension)
     global intersectionMatrix
     intersectionMatrix = np.zeros(polygonMatrix.shape)
 

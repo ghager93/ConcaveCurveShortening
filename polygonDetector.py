@@ -2,10 +2,10 @@ import numpy as np
 from scipy.sparse import csr_matrix
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
-from booleanFilter import MapArray
+from segmenting import ImageMatrix
 from xorEdgeDetect import xorEdgeDetect
 from Vector2D import Vector2D
-from matrixOps import booleanMatrixToPointList
+from imageMatrixOps import booleanMatrixToPointList
 
 
 def neighbouringPoints(pointList):
@@ -38,7 +38,7 @@ def main():
     image = ImageOps.invert(image)
     image = image.convert("1")
 
-    map = MapArray(np.array(image))
+    map = ImageMatrix(np.array(image))
 
     edgeDetectedMap = xorEdgeDetect(map)
 
