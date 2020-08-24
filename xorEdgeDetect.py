@@ -1,33 +1,8 @@
 import numpy as np
-from scipy.sparse import csr_matrix
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
 from segmenting import ImageMatrix
-
-
-def xorEdgeDetect(map: ImageMatrix):
-    if not map.pad:
-        map.padArray(1)
-
-    horizontalEdgeArray = xorArrays(map.array[:-1, 1:], map.array[1:, 1:])
-    verticalEdgeArray = xorArrays(map.array[1:, :-1], map.array[1:, 1:])
-
-    return ImageMatrix(horizontalEdgeArray | verticalEdgeArray, map.pad)
-
-
-def xorArrays(array1: np.ndarray, array2: np.ndarray):
-    return array1 ^ array2
-
-
-def spreadPoints(array: np.ndarray, spread: int):
-    convolvedArray = np.copy(array)
-    for ix in range(array.shape[0]-spread):
-        convolvedArray[ix, :] = np.convolve(convolvedArray[ix, :-spread+1], np.full(spread, True))
-
-    for iy in range(array.shape[1]-spread):
-        convolvedArray[:, iy] = np.convolve(convolvedArray[:-spread+1, iy], np.full(spread, True))
-
-    return convolvedArray
+from imageMatrixOps import xorEdgeDetect, spreadPoints
 
 
 def main():

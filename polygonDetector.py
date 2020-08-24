@@ -1,31 +1,10 @@
 import numpy as np
-from scipy.sparse import csr_matrix
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
+
+from polygonDetection import neighbouringPoints
 from segmenting import ImageMatrix
-from xorEdgeDetect import xorEdgeDetect
-from Vector2D import Vector2D
-from imageMatrixOps import booleanMatrixToPointList
-
-
-def neighbouringPoints(pointList):
-    neighbourhoods = list()
-    visited = set()
-    for point in pointList:
-        if point not in visited:
-            stack = list()
-            neighbourhood = set()
-            stack.append(point)
-            while stack:
-                curr = stack.pop()
-                visited.add(curr)
-                neighbourhood.add(curr)
-                for neighbour in pointList:
-                    if neighbour not in visited and curr.manhattanDistanceTo(neighbour) <= 2:
-                        stack.append(neighbour)
-            neighbourhoods.append(neighbourhood)
-
-    return neighbourhoods
+from imageMatrixOps import booleanMatrixToPointList, xorEdgeDetect
 
 
 def main():
