@@ -46,7 +46,8 @@ def floodFill(matrix):
 
 
 def getUnvisitedNeighbours(matrix, curr, visited):
-    neighbours = [curr + (1, 0), curr + (0, 1), curr + (-1, 0), curr + (0, -1)]
+    neighbours = [curr + (1, 0), curr + (0, 1), curr + (-1, 0), curr + (0, -1),
+                  curr + (1, 1), curr + (-1, -1), curr + (-1, 1), curr + (1, -1)]
 
     return [n for n in neighbours if indexIsWithinMatrix(n, matrix)
             and matrix[n] and n not in visited]

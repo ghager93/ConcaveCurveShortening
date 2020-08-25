@@ -153,13 +153,11 @@ class LoopSegment:
         return any([p1.manhattanDistanceTo(p2) == 1 for p2 in otherBorderPoints
                     for p1 in selfBorderPoints])
 
-
     def splitSegment(self):
         if self.width() > self.height():
             return self.splitSegmentHorizontally()
         else:
             return self.splitSegmentVertically()
-
 
     def splitSegmentHorizontally(self):
         leftPoints = [p for p in self.points if p.x <= self.mid().x]
@@ -169,7 +167,6 @@ class LoopSegment:
         rightSegment = LoopSegment(Vector2D(self.mid().x+1, self.topLeft.y), self.bottomRight, rightPoints)
 
         return leftSegment, rightSegment
-
 
     def splitSegmentVertically(self):
         upperPoints = [p for p in self.points if p.y <= self.mid().y]

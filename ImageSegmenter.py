@@ -1,19 +1,19 @@
-from LoopSegment import LoopSegment, splitSegment
+from LoopSegment import LoopSegment
 from Vector2D import Vector2D
 import numpy as np
 from typing import List, Dict
-from imageMatrixOps import booleanMatrixToPointList
+from imageMatrixOps import ImageMatrixOps
 
 
 def segmentMap(map: np.ndarray):
     mapSegment = LoopSegment(Vector2D(0, 0), Vector2D(map.shape[0]-1, map.shape[1]-1),
-                             booleanMatrixToPointList(map))
+                             ImageMatrixOps.booleanMatrixToPointList(map))
     segments = list()
     stack = list()
     stack.append(mapSegment)
     while stack:
         curr = stack.pop()
-        half1, half2 = splitSegment(curr)
+        half1, half2 = curr.splitSegment()
         if half1.pointsAreContinuousFunction():
             segments.append(half1)
         else:

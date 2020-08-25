@@ -27,8 +27,8 @@ class PaddedImageMatrix(ImageMatrix):
         super().__init__(matrix)
         self.pad = pad
 
-    def __init__(self, mapArray: ImageMatrix, pad: int = 0):
-        super().__init__(ImageMatrix.array)
+    def __init__(self, imageMatrix: ImageMatrix, pad: int = 0):
+        super().__init__(imageMatrix.matrix)
         self.pad = pad
 
     def paddedArray(self):
@@ -37,6 +37,22 @@ class PaddedImageMatrix(ImageMatrix):
     def paddedBooleanArray(self):
         return self.paddedArray() > 0
 
+class Polygon(ImageMatrixOps):
+    def __init__(self, matrix: np.ndarray, worldPos: Vector2D):
+        self.matrix = matrix
+        self.worldPos = worldPos
+        self.rootSingularity = self.selectSingularity()
+
+    def selectSingularity(self):
+        return self.manuallySelectSingularity()
+
+    def manuallySelectSingularity(self):
+        print('Select x value between 0 and', self.width())
+        x = int(input())
+        print('Select y value between 0 and', self.height())
+        y = int(input())
+
+        return Vector2D(x, y)
 
 def main():
     path = 'bin/output_images/small/afghanistan-silhouette_circle_5_small.bmp'

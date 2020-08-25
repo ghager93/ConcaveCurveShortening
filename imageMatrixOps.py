@@ -23,7 +23,10 @@ class ImageMatrixOps:
         horizontalEdgeArray = self.xorArrays(matrix[:-1, 1:], matrix[1:, 1:])
         verticalEdgeArray = self.xorArrays(matrix[1:, :-1], matrix[1:, 1:])
 
-        return horizontalEdgeArray | verticalEdgeArray
+        return horizontalEdgeArray[:-1, :-1] | verticalEdgeArray[:-1, :-1]
+
+    def shape(self):
+        return self.matrix.shape
 
     def width(self):
         return self.matrix.shape[0]
