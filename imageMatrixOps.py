@@ -2,11 +2,13 @@ from scipy.sparse import csr_matrix
 import numpy as np
 from Vector2D import Vector2D
 from PIL import Image, ImageOps
+import matplotlib.pyplot as plt
+from dataclasses import dataclass
 from typing import Tuple
 
+@dataclass
 class ImageMatrixOps:
-    def __init__(self):
-        self.matrix = None
+    matrix: np.ndarray
 
     def booleanMatrixToPointList(self):
         csr = csr_matrix(self.matrix)
@@ -40,9 +42,17 @@ class ImageMatrixOps:
     def asBoolean(self):
         return self.matrix > 0
 
-    def show(self):
+    def showForNSeconds(self, n: int = 1):
         plt.imshow(self.matrix)
-        plt.show()
+        plt.show(block=False)
+        plt.pause(n)
+        plt.close()
+
+    def showUntilKeyPress(self):
+        plt.imshow(self.matrix)
+        plt.show(block=False)
+        plt.waitforbuttonpress(0)
+        plt.close()
 
     def asRatioOf(self, matrix2):
         return self.countFalse() / matrix2.countFalse()
@@ -68,3 +78,15 @@ class ImageMatrixOps:
             convolvedArray[:, iy] = np.convolve(convolvedArray[:-spread+1, iy], np.full(spread, True))
 
         return convolvedArray
+
+
+def xorEdgeDetect(matrix: np.ndarray):
+    im = ImageMatrixOps(matrix)
+    return im.xorEdgeDetect()
+
+
+def booleanMatrixToPointList(matrix: np.ndarray):
+    csr = csr_matrix(matrix)
+    return [Vector2D(x, y)
+            for x in range(csr.shape[0])
+            for y in csr.indices[csr.indptr[x]:csr.indptr[x+1]]]

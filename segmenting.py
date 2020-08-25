@@ -4,6 +4,7 @@ from PIL import Image, ImageOps
 from matplotlib import pyplot as plt
 from imageMatrixOps import ImageMatrixOps
 import polygonDetection
+from dataclasses import dataclass
 
 from Vector2D import Vector2D
 import math
@@ -37,22 +38,17 @@ class PaddedImageMatrix(ImageMatrix):
     def paddedBooleanArray(self):
         return self.paddedArray() > 0
 
+@dataclass
 class Polygon(ImageMatrixOps):
-    def __init__(self, matrix: np.ndarray, worldPos: Vector2D):
-        self.matrix = matrix
-        self.worldPos = worldPos
+    matrix: np.ndarray
+    worldPos: Vector2D
+
+    def __post_init__(self):
         self.rootSingularity = self.selectSingularity()
 
     def selectSingularity(self):
         return self.manuallySelectSingularity()
 
-    def manuallySelectSingularity(self):
-        print('Select x value between 0 and', self.width())
-        x = int(input())
-        print('Select y value between 0 and', self.height())
-        y = int(input())
-
-        return Vector2D(x, y)
 
 def main():
     path = 'bin/output_images/small/afghanistan-silhouette_circle_5_small.bmp'
