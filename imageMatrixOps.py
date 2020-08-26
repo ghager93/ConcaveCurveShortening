@@ -16,16 +16,25 @@ class ImageMatrixOps:
                 for x in range(csr.shape[0])
                 for y in csr.indices[csr.indptr[x]:csr.indptr[x+1]]]
 
-    def zeroPad(self, pad):
+    def zeroPaddedMatrix(self, pad):
         return np.pad(self.matrix, (pad, pad), 'constant', constant_values=(0, 0))
 
-    def xorEdgeDetect(self):
-        matrix = self.zeroPad(1)
+    def xorEdgeDetect2(self):
+        matrix = self.zeroPaddedMatrix(1)
 
         horizontalEdgeArray = self.xorArrays(matrix[:-1, 1:], matrix[1:, 1:])
         verticalEdgeArray = self.xorArrays(matrix[1:, :-1], matrix[1:, 1:])
 
-        return horizontalEdgeArray[:-1, :-1] | verticalEdgeArray[:-1, :-1]
+        xor = horizontalEdgeArray[:-1, :-1] | verticalEdgeArray[:-1, :-1]
+        xor_shifted = np.full(xor.shape, False)
+        xor_shifted[:-1, :-1] = xor[1:, 1:]
+
+        return matrix[1:-1, 1:-1] & (xor | xor_shifted)
+
+    def xorEdgeDetect(self):
+        matrix = self.zeroPaddedMatrix(1)
+        return matrix[1:-1, 1:-1] & np.invert(matrix[1:-1, :-2] & matrix[1:-1, 2:] &
+                                              matrix[:-2, 1:-1] & matrix[2:, 1:-1])
 
     def shape(self):
         return self.matrix.shape

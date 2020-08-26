@@ -27,10 +27,7 @@ def selectSingularityEdgeDeletion(matrix: np.ndarray):
         nonlocal matrix
         matrix = np.copy(matrix)
         while True:
-            xor = imageMatrixOps.xorEdgeDetect(matrix)
-            xor_shifted = np.full(matrix.shape, False)
-            xor_shifted[:-1, :-1] = xor[1:, 1:]
-            edge = xor | xor_shifted
+            edge = imageMatrixOps.xorEdgeDetect(matrix)
             if not (matrix & np.invert(edge)).any():
                 break
             matrix &= np.invert(edge)

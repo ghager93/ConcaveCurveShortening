@@ -50,6 +50,11 @@ class Polygon(ImageMatrixOps):
         return self.manuallySelectSingularity()
 
 
+def getTestImageMatrix() -> ImageMatrix:
+    path = '../bin/output_images/small/afghanistan-silhouette_circle_5_small.bmp'
+    return ImageMatrix.open(path)
+
+
 def main():
     path = 'bin/output_images/small/afghanistan-silhouette_circle_5_small.bmp'
     im = ImageMatrix.open(path)
