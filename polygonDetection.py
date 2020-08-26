@@ -1,5 +1,26 @@
 from Vector2D import Vector2D
 import numpy as np
+from segmenting import Polygon
+import matplotlib.pyplot as plt
+
+def polygonCollection(matrix: np.ndarray):
+    polygons = list()
+    neighbourhoods = floodFill(matrix)
+    for neighbourhood in neighbourhoods:
+        polygonMatrix = np.full(matrix.shape, False)
+        unzipped_neighbourhood = tuple(zip(*neighbourhood))
+        polygonMatrix[unzipped_neighbourhood] = True
+        x_min = max(0, min(unzipped_neighbourhood[0])-1)
+        x_max = min(polygonMatrix.shape[0], max(unzipped_neighbourhood[0])+2)
+        y_min = max(0, min(unzipped_neighbourhood[1])-1)
+        y_max = min(polygonMatrix.shape[1], max(unzipped_neighbourhood[1])+2)
+
+        minimisedMatrix = polygonMatrix[x_min:x_max, y_min:y_max]
+
+        polygons.append(Polygon(minimisedMatrix, Vector2D(x_min, y_min)))
+
+    return polygons
+
 
 
 def neighbouringPoints(pointList):

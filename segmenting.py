@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 from imageMatrixOps import ImageMatrixOps
 import polygonDetection
 from dataclasses import dataclass
-
+import singularity
 from Vector2D import Vector2D
 import math
 
@@ -20,7 +20,7 @@ class ImageMatrix(ImageMatrixOps):
         return ImageMatrix(ImageMatrix.openImageAsBooleanMatrix(path))
 
     def getPolygons(self):
-        return polygonDetection.floodFill(self.xorEdgeDetect())
+        return polygonDetection.polygonCollection(self.matrix)
 
 
 class PaddedImageMatrix(ImageMatrix):
@@ -47,7 +47,7 @@ class Polygon(ImageMatrixOps):
         self.rootSingularity = self.selectSingularity()
 
     def selectSingularity(self):
-        return self.manuallySelectSingularity()
+        return singularity.selectSingularityEdgeDeletion(self.matrix)
 
 
 def getTestImageMatrix() -> ImageMatrix:

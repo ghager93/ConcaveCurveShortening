@@ -6,17 +6,17 @@ from matplotlib import pyplot as plt
 from imageMatrixOps import ImageMatrixOps
 import polygonDetection
 import singularity
-
 from Vector2D import Vector2D
 import math
+from time import time
 
 path = 'bin/output_images/small/afghanistan-silhouette_circle_5_small.bmp'
 im = ImageMatrix.open(path)
 original = ImageMatrix.open(path)
 
-
+start = time()
 singularity = singularity.selectSingularityEdgeDeletion(im.matrix)
-
+print('singularity time:', time()-start)
 
 singularity_matrix = im.matrix.astype(int)
 singularity_matrix[singularity] += 1
