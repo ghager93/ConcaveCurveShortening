@@ -70,6 +70,11 @@ def invert(array: np.ndarray):
     return array
 
 
+def flatten(array: np.ndarray):
+    array[array > 1] = 1
+    return array
+
+
 def show(array: np.ndarray, close_method: str=CLOSE_METHOD_KEY_PRESS, close_time: int=CLOSE_TIME_DEFAULT):
     if close_method == CLOSE_METHOD_KEY_PRESS:
         _show_until_key_press(array)
