@@ -2,7 +2,7 @@ import booleanShape
 import numpy as np
 from PIL import Image
 
-from segmenting import ImageMatrix, PaddedImageMatrix
+from segmenting import ImageSpace, PaddedImageMatrix
 
 
 class BooleanFilter:
@@ -14,7 +14,7 @@ class BooleanFilter:
         else:
             self.filter = booleanShape.Circle(dimension)
 
-    def applyToArray(self, mapArray: ImageMatrix):
+    def applyToArray(self, mapArray: ImageSpace):
         paddedMapArray = PaddedImageMatrix(mapArray, self.filter.shape[0])
         booleanArray = paddedMapArray.paddedBooleanArray()
         filteredArray = np.full(booleanArray.shape, True)
@@ -35,7 +35,7 @@ def main():
     dirname = 'lib/silhouettes/'
     filename = 'afghanistan-silhouette'
     extension = '.bmp'
-    filteredDirname = 'bin/output_images/'
+    filteredDirname = 'out/output_images/'
     filterType = 'circle'
     dimension = 5
 
@@ -43,7 +43,7 @@ def main():
     image = image.convert("1")
     image = image.resize((image.size[0]//10, image.size[1]//10))
 
-    imageArray = ImageMatrix(np.array(image))
+    imageArray = ImageSpace(np.array(image))
     imageArray.padArray(dimension)
 
     booleanFilter = BooleanFilter(filterType, dimension)

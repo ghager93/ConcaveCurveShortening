@@ -1,18 +1,18 @@
-from segmenting import ImageMatrix
+from segmenting import ImageSpace
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
 from matplotlib import pyplot as plt
-from imageMatrixOps import ImageMatrixOps
+from imageMatrix import ImageMatrix
 import polygonDetection
 import singularity
 from Vector2D import Vector2D
 import math
 from time import time
 
-path = 'bin/output_images/small/afghanistan-silhouette_circle_5_small.bmp'
-im = ImageMatrix.open(path)
-original = ImageMatrix.open(path)
+path = 'out/output_images/small/afghanistan-silhouette_circle_5_small.bmp'
+im = ImageSpace.open(path)
+original = ImageSpace.open(path)
 
 start = time()
 singularity = singularity.selectSingularityEdgeDeletion(im.matrix)

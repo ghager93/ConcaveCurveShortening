@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Tuple
 
 @dataclass
-class ImageMatrixOps:
+class ImageMatrix:
     matrix: np.ndarray
 
     def booleanMatrixToPointList(self):
@@ -71,7 +71,7 @@ class ImageMatrixOps:
 
     @staticmethod
     def openImageAsBooleanMatrix(imagePath: str):
-        return np.array(ImageOps.invert(Image.open(imagePath)).convert("1"))
+        return np.invert(np.array(Image.open(imagePath).convert("1")))
 
     @staticmethod
     def xorArrays(array1: np.ndarray, array2: np.ndarray):
@@ -90,7 +90,7 @@ class ImageMatrixOps:
 
 
 def xorEdgeDetect(matrix: np.ndarray):
-    im = ImageMatrixOps(matrix)
+    im = ImageMatrix(matrix)
     return im.xorEdgeDetect()
 
 

@@ -150,7 +150,7 @@ class LoopSegment:
             selfBorderPoints = {p for p in self.points if self.onBottomEdge(p)}
             otherBorderPoints = {p for p in other.points if other.onTopEdge(p)}
 
-        return any([p1.manhattanDistanceTo(p2) == 1 for p2 in otherBorderPoints
+        return any([p1.manhattan_distance_to(p2) == 1 for p2 in otherBorderPoints
                     for p1 in selfBorderPoints])
 
     def splitSegment(self):

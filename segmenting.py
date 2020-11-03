@@ -1,34 +1,27 @@
 import numpy as np
+from imageMatrix import ImageMatrix
+from polygonDetection import polygonCollection
 import matplotlib.pyplot as plt
-from PIL import Image, ImageOps
-from matplotlib import pyplot as plt
-from imageMatrixOps import ImageMatrixOps
-import polygonDetection
-from dataclasses import dataclass
-import singularity
-from Vector2D import Vector2D
-import math
 
-
-class ImageMatrix(ImageMatrixOps):
+class ImageSpace(ImageMatrix):
     def __init__(self, matrix: np.ndarray = None):
         self.matrix = matrix
         self.polygons = self.getPolygons()
 
     @staticmethod
     def open(path: str):
-        return ImageMatrix(ImageMatrix.openImageAsBooleanMatrix(path))
+        return ImageSpace(ImageSpace.openImageAsBooleanMatrix(path))
 
     def getPolygons(self):
-        return polygonDetection.polygonCollection(self.matrix)
+        return polygonCollection(self.matrix)
 
 
-class PaddedImageMatrix(ImageMatrix):
+class PaddedImageMatrix(ImageSpace):
     def __init__(self, matrix: np.ndarray = None, pad: int = 0):
         super().__init__(matrix)
         self.pad = pad
 
-    def __init__(self, imageMatrix: ImageMatrix, pad: int = 0):
+    def __init__(self, imageMatrix: ImageSpace, pad: int = 0):
         super().__init__(imageMatrix.matrix)
         self.pad = pad
 
@@ -38,26 +31,15 @@ class PaddedImageMatrix(ImageMatrix):
     def paddedBooleanArray(self):
         return self.paddedArray() > 0
 
-@dataclass
-class Polygon(ImageMatrixOps):
-    matrix: np.ndarray
-    worldPos: Vector2D
 
-    def __post_init__(self):
-        self.rootSingularity = self.selectSingularity()
-
-    def selectSingularity(self):
-        return singularity.selectSingularityEdgeDeletion(self.matrix)
-
-
-def getTestImageMatrix() -> ImageMatrix:
-    path = '../bin/output_images/small/afghanistan-silhouette_circle_5_small.bmp'
-    return ImageMatrix.open(path)
+def getTestImageMatrix() -> ImageSpace:
+    path = '../out/output_images/small/afghanistan-silhouette_circle_5_small.bmp'
+    return ImageSpace.open(path)
 
 
 def main():
-    path = 'bin/output_images/small/afghanistan-silhouette_circle_5_small.bmp'
-    im = ImageMatrix.open(path)
+    path = 'out/output_images/small/polygons.bmp'
+    im = ImageSpace.open(path)
     pass
 
 

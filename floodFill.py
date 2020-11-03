@@ -3,7 +3,7 @@ from Vector2D import Vector2D
 from LoopSegment import LoopSegment
 from PIL import Image, ImageOps
 import ImageSegmenter
-from segmenting import ImageMatrix
+from segmenting import ImageSpace
 import numpy as np
 import matplotlib.pyplot as plt
 import pickle
@@ -11,7 +11,7 @@ import time
 import cv2
 
 
-dirname = 'bin/output_images/edge_detect/with_pad/'
+dirname = 'out/output_images/edge_detect/with_pad/'
 filename = 'afghanistan-silhouette_circle_5_small'
 extension = '.bmp'
 

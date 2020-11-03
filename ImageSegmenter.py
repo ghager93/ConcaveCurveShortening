@@ -2,12 +2,12 @@ from LoopSegment import LoopSegment
 from Vector2D import Vector2D
 import numpy as np
 from typing import List, Dict
-from imageMatrixOps import ImageMatrixOps
+from imageMatrix import ImageMatrix
 
 
 def segmentMap(map: np.ndarray):
     mapSegment = LoopSegment(Vector2D(0, 0), Vector2D(map.shape[0]-1, map.shape[1]-1),
-                             ImageMatrixOps.booleanMatrixToPointList(map))
+                             ImageMatrix.booleanMatrixToPointList(map))
     segments = list()
     stack = list()
     stack.append(mapSegment)

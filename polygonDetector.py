@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
 
 from polygonDetection import neighbouringPoints
-from segmenting import ImageMatrix
-from imageMatrixOps import booleanMatrixToPointList, xorEdgeDetect
+from segmenting import ImageSpace
+from imageMatrix import booleanMatrixToPointList, xorEdgeDetect
 
 
 def main():
-    dirname = 'bin/output_images/small/'
+    dirname = 'out/output_images/small/'
     filename = 'afghanistan-silhouette_circle_5_small'
     extension = '.bmp'
 
@@ -17,7 +17,7 @@ def main():
     image = ImageOps.invert(image)
     image = image.convert("1")
 
-    map = ImageMatrix(np.array(image))
+    map = ImageSpace(np.array(image))
 
     edgeDetectedMap = xorEdgeDetect(map)
 

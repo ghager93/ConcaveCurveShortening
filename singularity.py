@@ -2,13 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
 from matplotlib import pyplot as plt
-from imageMatrixOps import ImageMatrixOps
-import imageMatrixOps
-import polygonDetection
+from imageMatrix import ImageMatrix
+import imageMatrix
 from dataclasses import dataclass
-import segmenting
 import random
-
 from Vector2D import Vector2D
 import math
 
@@ -27,11 +24,11 @@ def selectSingularityEdgeDeletion(matrix: np.ndarray):
         nonlocal matrix
         matrix = np.copy(matrix)
         while True:
-            edge = imageMatrixOps.xorEdgeDetect(matrix)
+            edge = imageMatrix.xorEdgeDetect(matrix)
             if not (matrix & np.invert(edge)).any():
                 break
             matrix &= np.invert(edge)
 
-        return imageMatrixOps.booleanMatrixToPointList(matrix)
+        return imageMatrix.booleanMatrixToPointList(matrix)
 
     return random.choice(findCandidateSingularitiesViaEdgeDeletion())

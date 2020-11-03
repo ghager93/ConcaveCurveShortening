@@ -1,6 +1,6 @@
 from Vector2D import Vector2D
 import numpy as np
-from segmenting import Polygon
+from polygon import Polygon
 import matplotlib.pyplot as plt
 
 def polygonCollection(matrix: np.ndarray):
@@ -36,7 +36,7 @@ def neighbouringPoints(pointList):
                 visited.add(curr)
                 neighbourhood.add(curr)
                 for neighbour in pointList:
-                    if neighbour not in visited and curr.manhattanDistanceTo(neighbour) <= 2:
+                    if neighbour not in visited and curr.manhattan_distance_to(neighbour) <= 2:
                         stack.append(neighbour)
             neighbourhoods.append(neighbourhood)
 
