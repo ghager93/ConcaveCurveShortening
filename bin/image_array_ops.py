@@ -1,11 +1,17 @@
 import numpy as np
 
 import bin.image_array as image_array
+import bin.morphology as morphology
 import bin.subtractive_binary_filter as subtractive_binary_filter
 
 
-def smooth(array: np.ndarray, filter_radius: int):
-    return subtractive_binary_filter.apply_to_array(array, filter_radius)
+def smooth(array: np.ndarray, kernel_radius: int):
+    return _smooth_by_binary_opening(array, kernel_radius)
+
+
+def _smooth_by_binary_opening(array: np.ndarray, kernel_radius: int):
+    structuring_element = morphology.get_circular_structuring_element(kernel_radius)
+    return morphology.binary_opening(array, structuring_element)
 
 
 def edge_detect(array: np.ndarray):

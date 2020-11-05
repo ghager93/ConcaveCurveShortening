@@ -63,6 +63,11 @@ def pad_by_ones(array: np.ndarray, pad: int = 1):
     return padded_array
 
 
+def remove_pad(array: np.ndarray, pad: int = 1):
+    assert array.shape[0] > 2*pad and array.shape[1] > 2*pad
+    return array[pad:-pad, pad:-pad]
+
+
 def invert(array: np.ndarray):
     array[array == 1] = 2
     array[array == 0] = 1
