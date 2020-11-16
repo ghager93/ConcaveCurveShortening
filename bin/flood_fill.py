@@ -11,56 +11,6 @@ import time
 from collections import namedtuple
 
 
-dirname = 'out/output_images/edge_detect/with_pad/'
-filename = 'afghanistan-silhouette_circle_5_small'
-extension = '.bmp'
-
-image = Image.open(dirname + filename + extension)
-# image = ImageOps.invert(image)
-image = image.convert("1")
-
-map = np.array(image)
-
-loops = list()
-visited = set()
-stack = list()
-
-for ix, iy in np.ndindex(map.shape):
-    if map[ix, iy] and Vector2D(ix, iy) not in visited:
-        loop = list()
-        curr = Vector2D(ix, iy)
-        stack.append(curr)
-        visited.add(curr)
-        while stack:
-            curr = stack.pop()
-            loop.append(curr)
-            if curr.x < map.shape[0]-1 and map[curr.x+1, curr.y] and Vector2D(curr.x+1, curr.y) not in visited:
-                stack.append(Vector2D(curr.x+1, curr.y))
-                visited.add(Vector2D(curr.x+1, curr.y))
-            if curr.y < map.shape[1]-1 and map[curr.x, curr.y+1] and Vector2D(curr.x, curr.y+1) not in visited:
-                stack.append(Vector2D(curr.x, curr.y+1))
-                visited.add(Vector2D(curr.x, curr.y+1))
-            if curr.x > 0 and map[curr.x-1, curr.y] and Vector2D(curr.x-1, curr.y) not in visited:
-                stack.append(Vector2D(curr.x-1, curr.y))
-                visited.add(Vector2D(curr.x-1, curr.y))
-            if curr.y > 0 and map[curr.x, curr.y-1] and Vector2D(curr.x, curr.y-1) not in visited:
-                stack.append(Vector2D(curr.x, curr.y-1))
-                visited.add(Vector2D(curr.x, curr.y-1))
-        loops.append(loop)
-
-map = map.astype(int)
-
-for loop in loops:
-    loopScreen = np.zeros(map.shape, np.int8)
-    for p in loop:
-        loopScreen[p.x, p.y] += 2
-
-    map += loopScreen
-    plt.imshow(map)
-    plt.show()
-    map -= loopScreen
-
-
 class _FloodFillObject:
     def __init__(self, matrix: np.ndarray):
         _assert_matrix_is_2d(matrix)
@@ -72,9 +22,9 @@ class _FloodFillObject:
     def get_polygons(self):
         polygons = list()
         self.visited = set()
-        for ix, iy in np.ndindex(self.matrix):
+        for ix, iy in np.ndindex(self.matrix.shape):
             start = Vector2D(ix, iy)
-            if self.is_unvisited(start):
+            if self.is_non_zero(start) and self.is_unvisited(start):
                 polygons.append(Polygon(self.get_points_in_polygon_by_dfs(start)))
 
         return polygons
@@ -83,7 +33,7 @@ class _FloodFillObject:
         points = list()
         self.stack = list()
         self.add_point_to_stack_and_visited_if_legal_and_unvisited(start)
-        while stack:
+        while self.stack:
             curr = self.stack.pop()
             points.append(curr)
             self.add_point_to_stack_and_visited_if_legal_and_unvisited(curr + (1, 0))
@@ -103,16 +53,42 @@ class _FloodFillObject:
     def is_non_zero(self, point: Vector2D):
         return self.matrix[point]
 
-    def is_legal(self, point, Vector2D):
+    def is_legal(self, point: Vector2D):
         return self.is_in_matrix(point) and self.is_non_zero(point)
 
     def add_point_to_stack_and_visited_if_legal_and_unvisited(self, point: Vector2D):
-        if  self.is_legal(point) and self.is_unvisited(point):
+        if self.is_legal(point) and self.is_unvisited(point):
             self.visited.add(point)
             self.stack.append(point)
 
 
-class PolygonBoundary(namedtuple('PolygonBoundary', ('xmin', 'ymin', 'xmax', 'ymax'))):
+# class PolygonBoundary(namedtuple('PolygonBoundary', ('xmin', 'ymin', 'xmax', 'ymax'))):
+#     def upper_left(self):
+#         return Vector2D(self.xmin, self.ymin)
+#
+#     def lower_right(self):
+#         return Vector2D(self.xmax, self.ymax)
+#
+#     def width(self):
+#         return self.xmax - self.xmin
+#
+#     def height(self):
+#         return self.ymax - self.ymin
+#
+#     def shape(self):
+#         return self.width(), self.height()
+#
+#     def size(self):
+#         return self.width() * self.height()
+
+
+class PolygonBoundary:
+    def __init__(self, xmin, ymin, xmax, ymax):
+        self.xmin = xmin
+        self.ymin = ymin
+        self.xmax = xmax
+        self.ymax = ymax
+
     def upper_left(self):
         return Vector2D(self.xmin, self.ymin)
 
@@ -135,10 +111,11 @@ class PolygonBoundary(namedtuple('PolygonBoundary', ('xmin', 'ymin', 'xmax', 'ym
 class Polygon(PolygonBoundary):
     def __init__(self, points):
         self.points = points
-        self.xmin = self._find_xmin()
-        self.xmax = self._find_xmax()
-        self.ymin = self._find_ymin()
-        self.ymax = self._find_ymax()
+        super().__init__(self._find_xmin(), self._find_ymin(), self._find_xmax(), self._find_ymax())
+        # self.xmin = self._find_xmin()
+        # self.xmax = self._find_xmax()
+        # self.ymin = self._find_ymin()
+        # self.ymax = self._find_ymax()
 
     def as_array(self):
         array = np.zeros(self.shape())
@@ -166,13 +143,11 @@ def flood_fill(matrix: np.ndarray):
     polygons = _FloodFillObject(matrix).get_polygons()
 
 
-
-
 def colour_matrix_with_gradient(matrix, polygons):
     coloured_matrix = np.zeros(matrix.shape)
     for i, polygon in enumerate(polygons):
         rows, cols = zip(*polygon.points)
-        coloured_matrix[rows, cols] = i/len(polygons)
+        coloured_matrix[rows, cols] = (i + 1)/len(polygons)
 
     return coloured_matrix
 
@@ -184,9 +159,10 @@ def colour_matrix_with_rgb(matrix, polygons):
         rows, cols = zip(*polygon.points)
         coloured_matrix[rows, cols, :] = colours[i]
 
+    return coloured_matrix
 
 def _get_n_equidistant_rgb(N: int):
-    return [_get_rgb_at_angle(a) for a in 6 * np.arange(N)/N]
+    return [_get_rgb_at_angle(a) for a in 6 * (np.arange(N) + 1)/N]
 
 
 def _get_rgb_at_angle(angle: float):
@@ -204,7 +180,6 @@ def _get_rgb_at_angle(angle: float):
         return X, 0, 1
     if np.ceil(angle) == 6:
         return 1, 0, X
-
 
 
 def _assert_matrix_is_2d(matrix: np.ndarray):
