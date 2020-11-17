@@ -78,11 +78,11 @@ def binary_skeletonisation(array: np.ndarray, structuring_element: StructuringEl
 
 
 def _lantejouls(array: np.ndarray, structuring_element: StructuringElement):
-    erosions = _get_erosions_up_to_k_times(array, structuring_element, 3)
-    return [_get_skeleton_subset(erosions[k], structuring_element, k) for k in range(3)]
+    erosions = _get_erosions_up_to_k_times(array, structuring_element, 20)
+    return [_get_skeleton_subset(erosions[k], structuring_element) for k in range(20)]
 
 
-def _get_skeleton_subset(array_kth_erosion: np.ndarray, structuring_element: StructuringElement, k: int):
+def _get_skeleton_subset(array_kth_erosion: np.ndarray, structuring_element: StructuringElement):
     return array_kth_erosion - binary_opening(array_kth_erosion, structuring_element)
 
 
@@ -100,6 +100,7 @@ def _get_erosions_up_to_k_times(array: np.ndarray, structuring_element: Structur
         erosions.append(array)
 
     return erosions
+
 
 def _assert_structuring_element_smaller_than_or_equal_to_array(array: np.ndarray,
                                                                structuring_element: StructuringElement):
