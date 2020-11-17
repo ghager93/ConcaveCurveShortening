@@ -72,6 +72,27 @@ def binary_dilation(array: np.ndarray, structuring_element: StructuringElement):
     return image_array.remove_pad(output_array, structuring_element.centre.x)
 
 
+def binary_skeletonisation(array: np.ndarray, structuring_element: StructuringElement):
+    _assert_structuring_element_smaller_than_or_equal_to_array(array, structuring_element)
+    return _lantejouls(array, structuring_element)
+
+
+def _lantejouls(array: np.ndarray, structuring_element: StructuringElement):
+
+
+
+def _get_skeleton_subset(array: np.ndarray, structuring_element: StructuringElement, k: int):
+    array_kth_erosion = _erode_array_k_times(array, structuring_element, k)
+    return array_kth_erosion - binary_opening(array_kth_erosion, structuring_element)
+
+
+def _erode_array_k_times(array: np.ndarray, structuring_element: StructuringElement, k: int):
+    for i in range(k):
+        array = binary_erosion(array, structuring_element)
+
+    return array
+
+
 def _assert_structuring_element_smaller_than_or_equal_to_array(array: np.ndarray,
                                                                structuring_element: StructuringElement):
     assert array.shape[0] >= structuring_element.kernel.shape[0] \
