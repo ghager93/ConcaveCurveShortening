@@ -81,21 +81,32 @@ def flatten(array: np.ndarray):
 
 
 def show(array: np.ndarray, close_method: str=CLOSE_METHOD_KEY_PRESS, close_time: int=CLOSE_TIME_DEFAULT):
-    if close_method == CLOSE_METHOD_KEY_PRESS:
-        _show_until_key_press(array)
-    if close_method == CLOSE_METHOD_TIMER:
-        _show_for_n_seconds(array, close_time)
-
-
-def _show_for_n_seconds(array: np.ndarray, n: int):
     plt.imshow(array)
+    if close_method == CLOSE_METHOD_KEY_PRESS:
+        _show_until_key_press()
+    if close_method == CLOSE_METHOD_TIMER:
+        _show_for_n_seconds(close_time)
+
+
+def show_multiple(arrays: list):
+    columns = int(np.ceil(np.sqrt(len(arrays))))
+    rows = int(len(arrays)//columns + 1)
+
+    fig = plt.figure()
+    for i, array in enumerate(arrays):
+        fig.add_subplot(rows, columns, i+1)
+        plt.imshow(array)
+
+    _show_until_key_press()
+
+
+def _show_for_n_seconds(n: int):
     plt.show(block=False)
     plt.pause(n)
     plt.close()
 
 
-def _show_until_key_press(array: np.ndarray):
-    plt.imshow(array)
+def _show_until_key_press():
     plt.show(block=False)
     plt.waitforbuttonpress(0)
     plt.close()
