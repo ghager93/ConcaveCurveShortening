@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.ndimage import morphology as sp_morphology
 
 import bin.image_array as image_array
 from bin.util.vector2d import Vector2D
@@ -8,6 +9,8 @@ OUTPUT_FILL_VALUE = 1
 
 KERNEL_ARRAY_DTYPE = 'int32'
 OUTPUT_ARRAY_DTYPE = 'int32'
+
+MAX_LANTUEJOULS_ITERATIONS = 50
 
 
 class StructuringElement:
@@ -47,6 +50,10 @@ def binary_closing(array: np.ndarray, structuring_element: StructuringElement):
 
 
 def binary_erosion(array: np.ndarray, structuring_element: StructuringElement):
+    return sp_morphology.binary_erosion(array, structuring_element.kernel).astype(int)
+
+
+def _binary_erosion(array: np.ndarray, structuring_element: StructuringElement):
     _assert_structuring_element_smaller_than_or_equal_to_array(array, structuring_element)
     padded_array = image_array.pad_by_ones(array, structuring_element.centre.x)
     output_array = _initialise_output_array(padded_array.shape)
@@ -61,6 +68,10 @@ def binary_erosion(array: np.ndarray, structuring_element: StructuringElement):
 
 
 def binary_dilation(array: np.ndarray, structuring_element: StructuringElement):
+    return sp_morphology.binary_dilation(array, structuring_element.kernel).astype(int)
+
+
+def _binary_dilation(array: np.ndarray, structuring_element: StructuringElement):
     _assert_structuring_element_smaller_than_or_equal_to_array(array, structuring_element)
     padded_array = image_array.pad_by_zeroes(array, structuring_element.centre.x)
     output_array = _initialise_output_array(padded_array.shape)
@@ -72,14 +83,41 @@ def binary_dilation(array: np.ndarray, structuring_element: StructuringElement):
     return image_array.remove_pad(output_array, structuring_element.centre.x)
 
 
+def _kernel_is_subset_of_array_segment(kernel: np.ndarray, array_segment: np.ndarray):
+    return np.array_equal(kernel, array_segment & kernel)
+
+
+def _initialise_output_array(array_shape: tuple):
+    return np.zeros(array_shape, dtype=OUTPUT_ARRAY_DTYPE)
+
+
+def _padded_array_index(padded_array_shape: tuple, pad: int):
+    return np.ndindex(padded_array_shape[0] - 2*pad, padded_array_shape[1] - 2*pad)
+
+
 def binary_skeletonisation(array: np.ndarray, structuring_element: StructuringElement):
     _assert_structuring_element_smaller_than_or_equal_to_array(array, structuring_element)
-    return _lantejouls(array, structuring_element)
+    return _lantuejouls2(array, structuring_element)
 
 
-def _lantejouls(array: np.ndarray, structuring_element: StructuringElement):
+def _lantuejouls(array: np.ndarray, structuring_element: StructuringElement):
     erosions = _get_erosions_up_to_k_times(array, structuring_element, 20)
     return [_get_skeleton_subset(erosions[k], structuring_element) for k in range(20)]
+
+
+def _lantuejouls2(array: np.ndarray, structuring_element: StructuringElement):
+    skeleton_subsets = list()
+
+    skeleton_subset = array
+    for i in range(MAX_LANTUEJOULS_ITERATIONS):
+        new_skeleton_subset = _get_skeleton_subset(array, structuring_element)
+        if np.array_equal(new_skeleton_subset, skeleton_subset):
+            break
+        skeleton_subset = new_skeleton_subset
+        skeleton_subsets.append(skeleton_subset)
+        array = binary_erosion(array, structuring_element)
+
+    return skeleton_subsets
 
 
 def _get_skeleton_subset(array_kth_erosion: np.ndarray, structuring_element: StructuringElement):
@@ -106,16 +144,3 @@ def _assert_structuring_element_smaller_than_or_equal_to_array(array: np.ndarray
                                                                structuring_element: StructuringElement):
     assert array.shape[0] >= structuring_element.kernel.shape[0] \
            and array.shape[1] >= structuring_element.kernel.shape[1]
-
-
-def _kernel_is_subset_of_array_segment(kernel: np.ndarray, array_segment: np.ndarray):
-    return np.array_equal(kernel, array_segment & kernel)
-
-
-def _initialise_output_array(array_shape: tuple):
-    return np.zeros(array_shape, dtype=OUTPUT_ARRAY_DTYPE)
-
-
-def _padded_array_index(padded_array_shape: tuple, pad: int):
-    return np.ndindex(padded_array_shape[0] - 2*pad, padded_array_shape[1] - 2*pad)
-

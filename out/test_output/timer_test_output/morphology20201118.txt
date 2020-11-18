@@ -1,0 +1,26 @@
+dilation:
+0.0
+erosion:
+0.0
+opening:
+0.015584230422973633
+closing:
+0.0
+skeletonisation:
+0.1693553924560547
+skeleton_subset, k = 1:
+0.0156862735748291
+skeleton_subset, k = 2:
+0.0
+skeleton_subset, k = 3:
+0.015567302703857422
+skeleton_subset, k = 10
+0.0
+erosion_k_times, k = 1
+0.015662431716918945
+erosion_k_times, k = 2
+0.0
+erosion_k_times, k = 3
+0.0
+erosion_k_times, k = 10
+0.01563405990600586
