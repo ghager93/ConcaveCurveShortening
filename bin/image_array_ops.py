@@ -33,4 +33,4 @@ def find_polygons(array: np.ndarray):
 
 
 def skeletonise(array: np.ndarray):
-    return morphology.binary_skeletonisation(array, morphology.get_circular_structuring_element(radius=3))
+    return morphology.binary_skeletonisation(array, morphology.get_circular_structuring_element(radius=1))

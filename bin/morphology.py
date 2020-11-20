@@ -3,6 +3,8 @@ from scipy.ndimage import morphology as sp_morphology
 
 import bin.image_array as image_array
 from bin.util.vector2d import Vector2D
+from lib.lookup.zhan_suen_neighbour_lookup import FIRST_ITERATION, SECOND_ITERATION
+from lib.lookup.zhan_suen_neighbour_lookup import NEIGHBOUR_LOOKUP
 
 KERNEL_FILL_VALUE = 1
 OUTPUT_FILL_VALUE = 1
@@ -10,7 +12,28 @@ OUTPUT_FILL_VALUE = 1
 KERNEL_ARRAY_DTYPE = 'int32'
 OUTPUT_ARRAY_DTYPE = 'int32'
 
-MAX_LANTUEJOULS_ITERATIONS = 50
+MAX_LANTUEJOULS_ITERATIONS = 500
+
+ZHAN_SUEN_POSITION_SHIFTS = {
+    0: (1, 0),
+    1: (2, 0),
+    2: (2, 1),
+    3: (2, 2),
+    4: (1, 2),
+    5: (0, 2),
+    6: (0, 1),
+    7: (0, 0)
+}
+
+ZS_P2 = 0
+ZS_P3 = 1
+ZS_P4 = 2
+ZS_P5 = 3
+ZS_P6 = 4
+ZS_P7 = 5
+ZS_P8 = 6
+ZS_P9 = 7
+ZHAN_SUEN_NEIGHBOURHOOD_SIZE = 3
 
 
 class StructuringElement:
@@ -92,7 +115,7 @@ def _initialise_output_array(array_shape: tuple):
 
 
 def _padded_array_index(padded_array_shape: tuple, pad: int):
-    return np.ndindex(padded_array_shape[0] - 2*pad, padded_array_shape[1] - 2*pad)
+    return np.ndindex(padded_array_shape[0] - 2 * pad, padded_array_shape[1] - 2 * pad)
 
 
 def binary_skeletonisation(array: np.ndarray, structuring_element: StructuringElement):
@@ -110,18 +133,24 @@ def _lantuejouls2(array: np.ndarray, structuring_element: StructuringElement):
 
     skeleton_subset = array
     for i in range(MAX_LANTUEJOULS_ITERATIONS):
-        new_skeleton_subset = _get_skeleton_subset(array, structuring_element)
-        if np.array_equal(new_skeleton_subset, skeleton_subset):
+        # new_skeleton_subset = _get_skeleton_subset(array, structuring_element)
+        # if np.array_equal(new_skeleton_subset, skeleton_subset):
+        #     break
+        # skeleton_subset = new_skeleton_subset
+        # skeleton_subsets.append(skeleton_subset)
+        # array = binary_erosion(array, structuring_element)
+
+        skeleton_subsets.append(_get_skeleton_subset(array, structuring_element))
+        new_array = binary_erosion(array, structuring_element)
+        if np.array_equal(new_array, array):
             break
-        skeleton_subset = new_skeleton_subset
-        skeleton_subsets.append(skeleton_subset)
-        array = binary_erosion(array, structuring_element)
+        array = new_array
 
     return skeleton_subsets
 
 
-def _get_skeleton_subset(array_kth_erosion: np.ndarray, structuring_element: StructuringElement):
-    return array_kth_erosion - binary_opening(array_kth_erosion, structuring_element)
+def _get_skeleton_subset(array_erosion: np.ndarray, structuring_element: StructuringElement):
+    return array_erosion - binary_opening(array_erosion, structuring_element)
 
 
 def _erode_k_times(array: np.ndarray, structuring_element: StructuringElement, k: int):
@@ -144,3 +173,37 @@ def _assert_structuring_element_smaller_than_or_equal_to_array(array: np.ndarray
                                                                structuring_element: StructuringElement):
     assert array.shape[0] >= structuring_element.kernel.shape[0] \
            and array.shape[1] >= structuring_element.kernel.shape[1]
+
+
+def zhan_suen(array: np.ndarray):
+    first_it_array = np.zeros(array.shape)
+    second_it_array = np.zeros(array.shape)
+
+    for i in range(10):
+        neighbour_array = _zs_calculate_neighbour_array(array)
+        criteria_mask = _zs_get_criteria_mask(neighbour_array)
+        first_it_array[criteria_mask == FIRST_ITERATION] = i
+        second_it_array[criteria_mask == SECOND_ITERATION] = i
+
+    pass
+
+
+def _zs_calculate_neighbour_array(array: np.ndarray):
+    padded_array = image_array.pad_by_zeroes(array)
+    return _zs_array_shift(padded_array, ZHAN_SUEN_POSITION_SHIFTS[ZS_P2]) | \
+           _zs_array_shift(padded_array, ZHAN_SUEN_POSITION_SHIFTS[ZS_P3]) << 1 | \
+           _zs_array_shift(padded_array, ZHAN_SUEN_POSITION_SHIFTS[ZS_P4]) << 2 | \
+           _zs_array_shift(padded_array, ZHAN_SUEN_POSITION_SHIFTS[ZS_P5]) << 3 | \
+           _zs_array_shift(padded_array, ZHAN_SUEN_POSITION_SHIFTS[ZS_P6]) << 4 | \
+           _zs_array_shift(padded_array, ZHAN_SUEN_POSITION_SHIFTS[ZS_P7]) << 5 | \
+           _zs_array_shift(padded_array, ZHAN_SUEN_POSITION_SHIFTS[ZS_P8]) << 6 | \
+           _zs_array_shift(padded_array, ZHAN_SUEN_POSITION_SHIFTS[ZS_P9]) << 7
+
+
+def _zs_array_shift(array: np.ndarray, shift: tuple):
+    return array[shift[1]:(shift[1] - 2), shift[0]:(shift[0] - 2)]
+
+
+def _zs_get_criteria_mask(array: np.ndarray):
+    array_flat = np.ndarray.flatten(array)
+    return np.reshape([NEIGHBOUR_LOOKUP[x] for x in array_flat], array.shape)
