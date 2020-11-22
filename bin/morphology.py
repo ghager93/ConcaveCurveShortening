@@ -3,7 +3,7 @@ from scipy.ndimage import morphology as sp_morphology
 
 import bin.image_array as image_array
 from bin.util.vector2d import Vector2D
-from lib.lookup.zhan_suen_neighbour_lookup import FIRST_ITERATION, SECOND_ITERATION
+from lib.lookup.zhan_suen_neighbour_lookup import FIRST_ITERATION, SECOND_ITERATION, BOTH_ITERATIONS
 from lib.lookup.zhan_suen_neighbour_lookup import NEIGHBOUR_LOOKUP
 
 KERNEL_FILL_VALUE = 1
@@ -13,6 +13,7 @@ KERNEL_ARRAY_DTYPE = 'int32'
 OUTPUT_ARRAY_DTYPE = 'int32'
 
 MAX_LANTUEJOULS_ITERATIONS = 500
+MAX_ZHAN_SUEN_ITERATIONS = 500
 
 ZHAN_SUEN_POSITION_SHIFTS = {
     0: (1, 0),
@@ -176,16 +177,27 @@ def _assert_structuring_element_smaller_than_or_equal_to_array(array: np.ndarray
 
 
 def zhan_suen(array: np.ndarray):
-    first_it_array = np.zeros(array.shape)
-    second_it_array = np.zeros(array.shape)
+    out = np.copy(array)
+    for i in range(MAX_ZHAN_SUEN_ITERATIONS):
+        criteria_mask = _zs_get_criteria_mask(out)
+        if not (any(out[criteria_mask == FIRST_ITERATION]) | any(out[criteria_mask == BOTH_ITERATIONS])):
+            break
+        out[criteria_mask == FIRST_ITERATION] = 0
+        out[criteria_mask == BOTH_ITERATIONS] = 0
 
-    for i in range(10):
-        neighbour_array = _zs_calculate_neighbour_array(array)
-        criteria_mask = _zs_get_criteria_mask(neighbour_array)
-        first_it_array[criteria_mask == FIRST_ITERATION] = i
-        second_it_array[criteria_mask == SECOND_ITERATION] = i
+        criteria_mask = _zs_get_criteria_mask(out)
+        if not (any(out[criteria_mask == SECOND_ITERATION]) | any(out[criteria_mask == BOTH_ITERATIONS])):
+            break
+        out[criteria_mask == SECOND_ITERATION] = 0
+        out[criteria_mask == BOTH_ITERATIONS] = 0
 
-    pass
+    return out
+
+
+def _zs_get_criteria_mask(array: np.ndarray):
+    neighbour_array = _zs_calculate_neighbour_array(array)
+    array_flat = np.ndarray.flatten(neighbour_array)
+    return np.reshape([NEIGHBOUR_LOOKUP[x] for x in array_flat], neighbour_array.shape)
 
 
 def _zs_calculate_neighbour_array(array: np.ndarray):
@@ -201,9 +213,4 @@ def _zs_calculate_neighbour_array(array: np.ndarray):
 
 
 def _zs_array_shift(array: np.ndarray, shift: tuple):
-    return array[shift[1]:(shift[1] - 2), shift[0]:(shift[0] - 2)]
-
-
-def _zs_get_criteria_mask(array: np.ndarray):
-    array_flat = np.ndarray.flatten(array)
-    return np.reshape([NEIGHBOUR_LOOKUP[x] for x in array_flat], array.shape)
+    return array[shift[1]:(array.shape[0]+shift[1]-2), shift[0]:(array.shape[1]+shift[0] - 2)]

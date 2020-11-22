@@ -1,6 +1,8 @@
 import numpy as np
 from PIL import Image
 from scipy.sparse import csr_matrix
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 from bin.util.vector2d import Vector2D
@@ -8,6 +10,7 @@ from bin.util.vector2d import Vector2D
 
 CLOSE_METHOD_KEY_PRESS = 'key_press'
 CLOSE_METHOD_TIMER = 'timer'
+CLOSE_METHOD_NO_BLOCK = 'no_block'
 CLOSE_TIME_DEFAULT = 1
 
 PADDED_ARRAY_DTYPE = 'int32'
@@ -108,5 +111,8 @@ def _show_for_n_seconds(n: int):
 
 def _show_until_key_press():
     plt.show(block=False)
-    plt.waitforbuttonpress(0)
+    button_press = False
+    while not button_press:
+        button_press = plt.waitforbuttonpress(0)
     plt.close()
+

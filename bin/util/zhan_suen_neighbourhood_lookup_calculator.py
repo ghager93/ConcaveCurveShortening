@@ -3,6 +3,7 @@ from bin.util.base_dir import base_dir
 CRITERIA_NOT_MET = 0
 FIRST_ITERATION = 1
 SECOND_ITERATION = 2
+BOTH_ITERATIONS = 3
 UPPER_LIMIT = 256
 
 FILENAME = base_dir + 'lib/lookup/zhan_suen_neighbour_lookup.py'
@@ -18,9 +19,11 @@ def build_criteria_dict():
 def _assign_criteria_score(n: int):
     if not _criteria_a(n) or not _criteria_b(n):
         return CRITERIA_NOT_MET
-    if _criteria_c(n) and _criteria_d(n):
+    elif _criteria_c(n) and _criteria_d(n):
+        if _criteria_c_dash(n) and _criteria_d_dash(n):
+            return BOTH_ITERATIONS
         return FIRST_ITERATION
-    if _criteria_c_dash(n) and _criteria_d_dash(n):
+    elif _criteria_c_dash(n) and _criteria_d_dash(n):
         return SECOND_ITERATION
 
     return CRITERIA_NOT_MET
@@ -72,5 +75,10 @@ def _number_of_01_patterns_in_ordered_neighbours_set(n: int):
 
 if __name__ == '__main__':
     pass
-    # with open(FILENAME, 'w') as f:
-    #     print(str(build_criteria_dict()), file=f)
+    with open(FILENAME, 'w') as f:
+        print('CRITERIA_NOT_MET = 0', file=f)
+        print('FIRST_ITERATION = 1', file=f)
+        print('SECOND_ITERATION = 2', file=f)
+        print('BOTH_ITERATIONS = 3', file=f)
+        print('NEIGHBOUR_LOOKUP = ', end='', file=f)
+        print(str(build_criteria_dict()), file=f)
