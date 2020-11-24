@@ -1,9 +1,10 @@
 import numpy as np
 
 import bin.image_array as image_array
-import bin.morphology as morphology
 import bin.flood_fill as flood_fill
-import bin.morphology.structuring_element
+from bin.morphology import basic_ops
+from bin.morphology import skeletonise
+from bin.morphology import structuring_element
 
 
 def smooth(array: np.ndarray, kernel_radius: int):
@@ -11,7 +12,7 @@ def smooth(array: np.ndarray, kernel_radius: int):
 
 
 def _smooth_by_binary_opening(array: np.ndarray, kernel_radius: int):
-    return morphology.binary_opening(array, bin.morphology.structuring_element.get_circular_structuring_element(kernel_radius))
+    return basic_ops.binary_opening(array, structuring_element.get_circular_structuring_element(kernel_radius))
 
 
 def edge_detect(array: np.ndarray):
@@ -25,7 +26,7 @@ def _xor_edge_detect(array: np.ndarray):
 
 
 def _morphology_edge_detect(array: np.ndarray):
-    eroded_array = morphology.binary_erosion(array, bin.morphology.structuring_element.get_circular_structuring_element(radius=3))
+    eroded_array = basic_ops.binary_erosion(array, structuring_element.get_circular_structuring_element(radius=3))
     return array - eroded_array
 
 
@@ -34,4 +35,4 @@ def find_polygons(array: np.ndarray):
 
 
 def skeletonise(array: np.ndarray):
-    return morphology.binary_skeletonisation(array, bin.morphology.structuring_element.get_circular_structuring_element(radius=1))
+    return skeletonise.binary_skeletonisation(array, structuring_element.get_circular_structuring_element(radius=1))

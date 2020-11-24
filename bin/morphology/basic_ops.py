@@ -2,8 +2,8 @@ import numpy as np
 from scipy.ndimage import morphology as sp_morphology
 
 from bin import image_array as image_array
-from bin.morphology import _assert_structuring_element_smaller_than_or_equal_to_array, KERNEL_FILL_VALUE, \
-    OUTPUT_ARRAY_DTYPE
+from bin.morphology.structuring_element import _assert_structuring_element_smaller_than_or_equal_to_array, \
+    KERNEL_FILL_VALUE, OUTPUT_ARRAY_DTYPE
 from bin.morphology.structuring_element import StructuringElement
 
 

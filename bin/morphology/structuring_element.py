@@ -1,7 +1,12 @@
 import numpy as np
 
-from bin.morphology import KERNEL_ARRAY_DTYPE, KERNEL_FILL_VALUE
 from bin.util.vector2d import Vector2D
+
+
+KERNEL_FILL_VALUE = 1
+OUTPUT_FILL_VALUE = 1
+KERNEL_ARRAY_DTYPE = 'int32'
+OUTPUT_ARRAY_DTYPE = 'int32'
 
 
 class StructuringElement:
@@ -32,7 +37,7 @@ def _get_kernel_shape(radius: int):
     return 2 * radius + 1, 2 * radius + 1
 
 
-KERNEL_FILL_VALUE = 1
-OUTPUT_FILL_VALUE = 1
-KERNEL_ARRAY_DTYPE = 'int32'
-OUTPUT_ARRAY_DTYPE = 'int32'
+def _assert_structuring_element_smaller_than_or_equal_to_array(array: np.ndarray,
+                                                               structuring_element: StructuringElement):
+    assert array.shape[0] >= structuring_element.kernel.shape[0] \
+           and array.shape[1] >= structuring_element.kernel.shape[1]

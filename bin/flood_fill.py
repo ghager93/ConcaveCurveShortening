@@ -6,8 +6,6 @@ from bin.util.vector2d import Vector2D
 
 class _FloodFillObject:
     def __init__(self, matrix: np.ndarray):
-        _assert_matrix_is_2d(matrix)
-
         self.matrix = matrix
         self.visited = set()
         self.stack = list()

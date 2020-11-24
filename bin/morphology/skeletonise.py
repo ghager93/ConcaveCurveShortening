@@ -2,7 +2,8 @@ import numpy as np
 
 from bin import image_array as image_array
 from bin.morphology.basic_ops import binary_erosion, binary_opening
-from bin.morphology.structuring_element import StructuringElement
+from bin.morphology.structuring_element import StructuringElement, \
+    _assert_structuring_element_smaller_than_or_equal_to_array
 from lib.lookup.zhan_suen_neighbour_lookup import FIRST_ITERATION, BOTH_ITERATIONS, SECOND_ITERATION, NEIGHBOUR_LOOKUP
 
 MAX_LANTUEJOULS_ITERATIONS = 500
@@ -77,12 +78,6 @@ def _get_erosions_up_to_k_times(array: np.ndarray, structuring_element: Structur
         erosions.append(array)
 
     return erosions
-
-
-def _assert_structuring_element_smaller_than_or_equal_to_array(array: np.ndarray,
-                                                               structuring_element: StructuringElement):
-    assert array.shape[0] >= structuring_element.kernel.shape[0] \
-           and array.shape[1] >= structuring_element.kernel.shape[1]
 
 
 def zhan_suen(array: np.ndarray):
