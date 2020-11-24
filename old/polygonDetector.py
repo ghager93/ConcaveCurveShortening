@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
 
-from polygonDetection import neighbouringPoints
-from segmenting import ImageSpace
-from imageMatrix import booleanMatrixToPointList, xorEdgeDetect
+from old.polygonDetection import neighbouringPoints
+from old.segmenting import ImageSpace
+from old.imageMatrix import booleanMatrixToPointList, xorEdgeDetect
 
 
 def main():

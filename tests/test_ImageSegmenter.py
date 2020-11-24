@@ -1,16 +1,12 @@
 from unittest import TestCase
 
-import LoopSegment
-from Vector2D import Vector2D
-from LoopSegment import LoopSegment
-from PIL import Image, ImageOps
-import ImageSegmenter
-from segmenting import ImageSpace
+from old import LoopSegment, ImageSegmenter
+from old.Vector2D import Vector2D
+from old.LoopSegment import LoopSegment
+from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 import pickle
-import time
-import cv2
 
 
 class Test(TestCase):

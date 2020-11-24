@@ -2,10 +2,9 @@ from dataclasses import dataclass
 
 import numpy as np
 
-import raytracePolygonIntersection
-import singularity
-from Vector2D import Vector2D
-from imageMatrix import ImageMatrix
+from old import raytracePolygonIntersection, singularity
+from old.Vector2D import Vector2D
+from old.imageMatrix import ImageMatrix
 
 
 @dataclass

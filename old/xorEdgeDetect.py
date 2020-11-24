@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
-from segmenting import ImageSpace
-from imageMatrix import xorEdgeDetect, spreadPoints
+from old.segmenting import ImageSpace
+from old.imageMatrix import xorEdgeDetect, spreadPoints
 
 
 def main():

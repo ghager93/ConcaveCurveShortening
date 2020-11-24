@@ -1,13 +1,7 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from PIL import Image, ImageOps
-from matplotlib import pyplot as plt
-from imageMatrix import ImageMatrix
-import imageMatrix
-from dataclasses import dataclass
+from old import imageMatrix
 import random
-from Vector2D import Vector2D
-import math
+from old.Vector2D import Vector2D
 
 
 def selectSingularityManually(matrix: np.ndarray):

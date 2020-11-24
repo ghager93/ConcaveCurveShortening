@@ -1,10 +1,10 @@
 from scipy.sparse import csr_matrix
 import numpy as np
-from Vector2D import Vector2D
-from PIL import Image, ImageOps
+from old.Vector2D import Vector2D
+from PIL import Image
 import matplotlib.pyplot as plt
 from dataclasses import dataclass
-from typing import Tuple
+
 
 @dataclass
 class ImageMatrix:

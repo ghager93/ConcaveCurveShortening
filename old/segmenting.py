@@ -1,7 +1,7 @@
 import numpy as np
-from imageMatrix import ImageMatrix
-from polygonDetection import polygonCollection
-import matplotlib.pyplot as plt
+from old.imageMatrix import ImageMatrix
+from old.polygonDetection import polygonCollection
+
 
 class ImageSpace(ImageMatrix):
     def __init__(self, matrix: np.ndarray = None):
@@ -38,7 +38,7 @@ def getTestImageMatrix() -> ImageSpace:
 
 
 def main():
-    path = 'out/output_images/small/polygons.bmp'
+    path = '../out/output_images/small/polygons.bmp'
     im = ImageSpace.open(path)
     pass
 

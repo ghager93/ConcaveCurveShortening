@@ -1,8 +1,7 @@
 from unittest import TestCase
-import polygonDetection
-from Vector2D import Vector2D
+from old.Vector2D import Vector2D
 import numpy as np
-import segmenting
+from old import segmenting, polygonDetection
 
 
 class Test(TestCase):

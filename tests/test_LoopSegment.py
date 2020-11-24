@@ -1,6 +1,6 @@
 from unittest import TestCase
-import LoopSegment
-from Vector2D import Vector2D
+from old import LoopSegment
+from old.Vector2D import Vector2D
 import numpy as np
 import time
 

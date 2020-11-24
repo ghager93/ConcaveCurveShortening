@@ -1,8 +1,8 @@
-import booleanShape
+from old import booleanShape
 import numpy as np
 from PIL import Image
 
-from segmenting import ImageSpace, PaddedImageMatrix
+from old.segmenting import ImageSpace, PaddedImageMatrix
 
 
 class BooleanFilter:

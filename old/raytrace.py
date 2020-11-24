@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from PIL import Image, ImageOps
-from Vector2D import Vector2D
+from old.Vector2D import Vector2D
 import math
 
 

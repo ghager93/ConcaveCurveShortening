@@ -1,6 +1,5 @@
 from unittest import TestCase
-import imageMatrix
-import segmenting
+from old import segmenting
 
 
 class TestImageMatrixOps(TestCase):

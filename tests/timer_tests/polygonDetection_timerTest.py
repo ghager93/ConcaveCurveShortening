@@ -1,5 +1,5 @@
 import numpy as np
-from Vector2D import Vector2D
+from old.Vector2D import Vector2D
 import random
 from time import time
 

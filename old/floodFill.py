@@ -1,13 +1,7 @@
-from unittest import TestCase
-from Vector2D import Vector2D
-from LoopSegment import LoopSegment
-from PIL import Image, ImageOps
-import ImageSegmenter
-from segmenting import ImageSpace
+from old.Vector2D import Vector2D
+from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
-import pickle
-import time
 from collections import namedtuple
 
 

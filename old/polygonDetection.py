@@ -1,7 +1,7 @@
-from Vector2D import Vector2D
+from old.Vector2D import Vector2D
 import numpy as np
-from polygon import Polygon
-import matplotlib.pyplot as plt
+from old.polygon import Polygon
+
 
 def polygonCollection(matrix: np.ndarray):
     polygons = list()

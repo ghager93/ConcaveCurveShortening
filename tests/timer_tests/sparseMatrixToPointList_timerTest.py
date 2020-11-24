@@ -1,8 +1,7 @@
 from scipy.sparse import csr_matrix
 import numpy as np
-import matplotlib.pyplot as plt
 from time import time
-from Vector2D import Vector2D
+from old.Vector2D import Vector2D
 
 matrix = np.empty(1000 * 1000)
 matrix.fill(False)

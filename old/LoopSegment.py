@@ -1,4 +1,4 @@
-from Vector2D import Vector2D
+from old.Vector2D import Vector2D
 from typing import List
 import numpy as np
 

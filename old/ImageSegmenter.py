@@ -1,8 +1,8 @@
-from LoopSegment import LoopSegment
-from Vector2D import Vector2D
+from old.LoopSegment import LoopSegment
+from old.Vector2D import Vector2D
 import numpy as np
-from typing import List, Dict
-from imageMatrix import ImageMatrix
+from typing import List
+from old.imageMatrix import ImageMatrix
 
 
 def segmentMap(map: np.ndarray):
