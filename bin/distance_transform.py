@@ -16,7 +16,7 @@ def _by_edge_detection(array: np.ndarray):
         out += copy_array
         copy_array -= image_array_ops.edge_detect(copy_array)
 
-    return out
+    return out.astype(int)
 
 
 def _by_erosion(array: np.ndarray):
