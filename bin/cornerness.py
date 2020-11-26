@@ -3,7 +3,7 @@ import numpy as np
 from bin.image_array import pad_by_zeroes
 
 
-def _cornerness(array: np.ndarray):
+def cornerness(array: np.ndarray):
     out = 8-sum(_get_shifted_neighbour_arrays(array))
     out[array == 0] = 0
 
