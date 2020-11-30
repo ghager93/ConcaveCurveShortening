@@ -6,11 +6,29 @@ from bin import cornerness
 from bin.util import neighbour_array
 
 
+def medial_axis_transform(array: np.ndarray):
+    mat = np.pad(np.copy(array), 1)
+    ranked = ranking(mat)
+    deletion_table = _get_deletion_table()
+
+    for p in ranked:
+        if mat[p]:
+            neighbourhood_binary = neighbour_array.array_to_binary(mat[p[0]-1:p[0]+2, p[1]-1:p[1]+2])
+            mat[p] = not deletion_table[neighbourhood_binary]
+
+    return mat[1:-1, 1:-1]
+
+
+def _get_deletion_table():
+    deletion_table_filepath = 'lib/lookup/mat_deletion_lookup.txt'
+    with open(deletion_table_filepath) as f:
+        return [int(x) for x in f.readlines()]
+
+
 def ranking(array: np.ndarray):
     flat_rank = np.lexsort((cornerness.cornerness(array).flatten(),
                             distance_transform.get_distance_transform(array).flatten()))
-    image_array.show(flat_rank.reshape(array.shape))
-    return [[x // array.shape[0], x % array.shape[0]] for x in flat_rank]
+    return [(x // array.shape[1], x % array.shape[1]) for x in flat_rank]
 
 
 def _test_connection_criteria():
