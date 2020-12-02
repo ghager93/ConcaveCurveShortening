@@ -21,7 +21,7 @@ class StructuringElement:
         return self.kernel.shape[1]
 
 
-def get_circular_structuring_element(radius: int = 1):
+def circular_structuring_element(radius: int = 1):
     return StructuringElement(_make_circular_kernel(radius), Vector2D(radius, radius))
 
 

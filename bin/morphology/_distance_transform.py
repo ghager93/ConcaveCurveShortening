@@ -2,10 +2,11 @@ import numpy as np
 
 import bin.image_array as image_array
 import bin.image_array_ops as image_array_ops
-from bin.morphology import basic_ops
+import bin.morphology._edge_detection
+from bin.morphology import _operations
 
 
-def get_distance_transform(array: np.ndarray):
+def distance_transform(array: np.ndarray):
     return _by_edge_detection(array)
 
 
@@ -14,7 +15,7 @@ def _by_edge_detection(array: np.ndarray):
     out = np.zeros(copy_array.shape)
     while copy_array.any():
         out += copy_array
-        copy_array -= image_array_ops.edge_detect(copy_array)
+        copy_array -= bin.morphology._edge_detection.edge_detect(copy_array)
 
     return out.astype(int)
 
@@ -24,6 +25,6 @@ def _by_erosion(array: np.ndarray):
     out = np.zeros(copy_array.shape)
     while copy_array.any():
         out += copy_array
-        copy_array = basic_ops.binary_erosion(copy_array)
+        copy_array = _operations.binary_erosion(copy_array)
 
     return out

@@ -2,7 +2,7 @@ from PIL import Image
 from PIL import ImageOps
 
 
-def open(path: str):
+def open_image(path: str):
     try:
         return Image.open(path)
     except:
@@ -10,7 +10,7 @@ def open(path: str):
 
 
 def open_as_binary(path: str):
-    return _convert_to_binary(open(path))
+    return _convert_to_binary(open_image(path))
 
 
 def _convert_to_binary(image: Image.Image):

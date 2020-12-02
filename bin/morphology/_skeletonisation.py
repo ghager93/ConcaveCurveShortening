@@ -1,7 +1,7 @@
 import numpy as np
 
 from bin import image_array as image_array
-from bin.morphology.basic_ops import binary_erosion, binary_opening
+from bin.morphology._operations import binary_erosion, binary_opening
 from bin.morphology.structuring_element import StructuringElement, \
     _assert_structuring_element_smaller_than_or_equal_to_array
 from lib.lookup.zhan_suen_neighbour_lookup import FIRST_ITERATION, BOTH_ITERATIONS, SECOND_ITERATION, NEIGHBOUR_LOOKUP
@@ -44,13 +44,6 @@ def _lantuejouls2(array: np.ndarray, structuring_element: StructuringElement):
 
     skeleton_subset = array
     for i in range(MAX_LANTUEJOULS_ITERATIONS):
-        # new_skeleton_subset = _get_skeleton_subset(array, structuring_element)
-        # if np.array_equal(new_skeleton_subset, skeleton_subset):
-        #     break
-        # skeleton_subset = new_skeleton_subset
-        # skeleton_subsets.append(skeleton_subset)
-        # array = binary_erosion(array, structuring_element)
-
         skeleton_subsets.append(_get_skeleton_subset(array, structuring_element))
         new_array = binary_erosion(array, structuring_element)
         if np.array_equal(new_array, array):

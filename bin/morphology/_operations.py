@@ -3,19 +3,19 @@ from scipy.ndimage import morphology as sp_morphology
 
 from bin import image_array as image_array
 from bin.morphology.structuring_element import _assert_structuring_element_smaller_than_or_equal_to_array, \
-    KERNEL_FILL_VALUE, OUTPUT_ARRAY_DTYPE, get_circular_structuring_element
+    KERNEL_FILL_VALUE, OUTPUT_ARRAY_DTYPE, circular_structuring_element
 from bin.morphology.structuring_element import StructuringElement
 
 
-def binary_opening(array: np.ndarray, structuring_element: StructuringElement = get_circular_structuring_element()):
+def binary_opening(array: np.ndarray, structuring_element: StructuringElement = circular_structuring_element()):
     return binary_dilation(binary_erosion(array, structuring_element), structuring_element)
 
 
-def binary_closing(array: np.ndarray, structuring_element: StructuringElement = get_circular_structuring_element()):
+def binary_closing(array: np.ndarray, structuring_element: StructuringElement = circular_structuring_element()):
     return binary_erosion(binary_dilation(array, structuring_element), structuring_element)
 
 
-def binary_erosion(array: np.ndarray, structuring_element: StructuringElement = get_circular_structuring_element()):
+def binary_erosion(array: np.ndarray, structuring_element: StructuringElement = circular_structuring_element()):
     return sp_morphology.binary_erosion(array, structuring_element.kernel).astype(int)
 
 
@@ -33,7 +33,7 @@ def _binary_erosion(array: np.ndarray, structuring_element: StructuringElement):
     return image_array.remove_pad(output_array, structuring_element.centre.x)
 
 
-def binary_dilation(array: np.ndarray, structuring_element: StructuringElement = get_circular_structuring_element()):
+def binary_dilation(array: np.ndarray, structuring_element: StructuringElement = circular_structuring_element()):
     return sp_morphology.binary_dilation(array, structuring_element.kernel).astype(int)
 
 

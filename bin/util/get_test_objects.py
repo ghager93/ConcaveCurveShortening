@@ -8,7 +8,7 @@ country_path = base_dir + 'lib/silhouettes/'
 
 
 def get_test_image(filename: str = 'test1.bmp'):
-    return image.open(test_image_path + filename)
+    return image.open_image(test_image_path + filename)
 
 
 def get_test_image_array(filename: str = 'test1.bmp'):
@@ -16,7 +16,7 @@ def get_test_image_array(filename: str = 'test1.bmp'):
 
 
 def get_smoothed_country_array(filename: str = 'afghanistan-silhouette.bmp'):
-    im = image.open(country_path + filename)
+    im = image.open_image(country_path + filename)
     im = image.resize_by_percentage(im, (0.25, 0.25))
     array = image_array.convert_image_to_array(im)
     array = image_array.invert(array)

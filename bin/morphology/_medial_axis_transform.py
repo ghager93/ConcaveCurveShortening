@@ -1,9 +1,8 @@
 import numpy as np
 
 from bin import image_array
-from bin import distance_transform
-from bin import cornerness
-from bin.util import neighbour_array
+from bin.morphology import _distance_transform, _sharpness_transform
+from bin.morphology.util import neighbour_array
 
 
 def medial_axis_transform(array: np.ndarray):
@@ -13,7 +12,7 @@ def medial_axis_transform(array: np.ndarray):
 
     for p in ranked:
         if mat[p]:
-            neighbourhood_binary = neighbour_array.array_to_binary(mat[p[0]-1:p[0]+2, p[1]-1:p[1]+2])
+            neighbourhood_binary = neighbour_array.array_to_binary(mat[p[0] - 1:p[0] + 2, p[1] - 1:p[1] + 2])
             mat[p] = not deletion_table[neighbourhood_binary]
 
     return mat[1:-1, 1:-1]
@@ -26,8 +25,8 @@ def _get_deletion_table():
 
 
 def ranking(array: np.ndarray):
-    flat_rank = np.lexsort((cornerness.cornerness(array).flatten(),
-                            distance_transform.get_distance_transform(array).flatten()))
+    flat_rank = np.lexsort((_sharpness_transform.sharpness_transform(array).flatten(),
+                            _distance_transform.distance_transform(array).flatten()))
     return [(x // array.shape[1], x % array.shape[1]) for x in flat_rank]
 
 
