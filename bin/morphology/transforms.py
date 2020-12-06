@@ -5,7 +5,7 @@ from . import _edge_detection, _medial_axis_transform
 from . import _skeletonisation
 
 
-def thinning_transform(array: np.ndarray):
+def skeleton_transform(array: np.ndarray):
     return _skeletonisation.zhan_suen(array)
 
 

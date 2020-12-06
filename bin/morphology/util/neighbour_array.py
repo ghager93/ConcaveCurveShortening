@@ -40,3 +40,42 @@ def get_shifted_neighbour_arrays(array: np.ndarray):
     return [padded_array[x:padded_array.shape[0] + x-2, y:padded_array.shape[1] + y-2]
             for x in range(3) for y in range(3)
             if x != 1 or y != 1]
+
+
+def number_of_neighbours(e):
+    if type(e) is np.ndarray:
+        n = array_to_binary(e)
+    else:
+        n = e
+
+    return _number_of_bits_high(n)
+
+
+def _number_of_bits_high(n: int):
+    return bin(n).count('1')
+
+
+def number_of_connected_neighbours(e):
+    if type(e) is np.ndarray:
+        n = array_to_binary(e)
+    else:
+        n = e
+
+    return _number_of_01_patterns_in_ordered_neighbours_set(n)
+
+
+def _number_of_01_patterns_in_ordered_neighbours_set(n: int):
+    mask = 0b11000000
+    pattern = 0b01000000
+    cnt = 0
+    for i in range(7):
+        if mask & n == pattern:
+            cnt += 1
+        mask >>= 1
+        pattern >>= 1
+
+    if 0b10000001 & n == 0b10000000:
+        cnt += 1
+
+    return cnt
+
