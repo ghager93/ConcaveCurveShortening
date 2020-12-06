@@ -17,7 +17,7 @@ PADDED_ARRAY_DTYPE = 'int32'
 
 
 def convert_image_to_array(image: Image.Image):
-    return np.array(image)
+    return np.array(image).astype(int)
 
 
 def convert_image_to_binary_array(image: Image.Image):

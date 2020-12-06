@@ -5,6 +5,7 @@ import bin.image_array_ops as image_array_ops
 
 test_image_path = base_dir + 'lib/polygon_test_shapes/'
 country_path = base_dir + 'lib/silhouettes/'
+skeleton_path = base_dir + 'lib/skeletons/'
 
 
 def get_test_image(filename: str = 'test1.bmp'):
@@ -23,3 +24,7 @@ def get_smoothed_country_array(filename: str = 'afghanistan-silhouette.bmp'):
     array = image_array_ops.smooth(array, 5)
 
     return array
+
+
+def get_country_skeleton_array(filename: str = 'afghanistan.bmp'):
+    return image_array.convert_image_to_array(image.open_image(skeleton_path + filename))
