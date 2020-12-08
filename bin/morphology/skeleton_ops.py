@@ -1,15 +1,17 @@
 import numpy as np
 
-from bin.morphology.util import neighbour_array
+from bin.morphology.util import neighbour_array, branch_point_lookup_calculator
 from bin.morphology.transforms import distance_transform
 
 
 def branch_points(skeleton: np.ndarray):
     padded_skeleton = np.pad(skeleton, 1)
 
+    branch_lut = branch_point_lookup_calculator.load_lut()
+
     def is_branch_point(ix, iy):
         return padded_skeleton[ix + 1, iy + 1] \
-               and neighbour_array.number_of_connected_neighbours(padded_skeleton[ix:ix + 3, iy:iy + 3]) > 2
+               and branch_lut[neighbour_array.array_to_binary(padded_skeleton[ix:ix + 3, iy:iy + 3])]
 
     return {(ix, iy) for ix, iy in np.ndindex(skeleton.shape) if is_branch_point(ix, iy)}
 

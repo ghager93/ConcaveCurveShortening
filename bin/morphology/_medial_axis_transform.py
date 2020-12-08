@@ -41,9 +41,7 @@ def _create_delete_lookup_array():
 
 
 def _can_delete(n: int):
-    if _number_of_neighbours(n) < 3:
-        return False
-    return _would_not_break_connection(n)
+    return _number_of_neighbours(n) >= 3 and _would_not_break_connection(n)
 
 
 def _number_of_neighbours(n: int):
