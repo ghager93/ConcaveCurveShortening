@@ -27,10 +27,14 @@ def end_points(skeleton: np.ndarray):
 
 
 def image_root(image: np.ndarray, skeleton: np.ndarray):
-    argmax = argmax_random_tiebreak(distance_transform(image) * skeleton)
+    argmax = _argmax_random_tiebreak(distance_transform(image) * skeleton)
 
     return argmax // image.shape[1], argmax % image.shape[1]
 
 
-def argmax_random_tiebreak(array: np.ndarray):
+def _argmax_random_tiebreak(array: np.ndarray):
     return np.random.choice(np.flatnonzero(array == array.max()))
+
+
+def node_list(skeleton: np.ndarray):
+    return np.argwhere(skeleton).tolist()

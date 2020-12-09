@@ -1,4 +1,5 @@
 import numpy as np
+from functools import wraps
 
 from bin.image_array import pad_by_zeroes
 
@@ -54,6 +55,15 @@ def get_shifted_neighbour_arrays(array: np.ndarray):
             if x != 1 or y != 1]
 
 
+def array_to_binary_wrapper(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        args = [array_to_binary(a) if type(a) is np.ndarray else a for a in args]
+        kwargs = {kw:(array_to_binary(a) if type(a) is np.ndarray else a) for (kw, a) in kwargs.items()}
+        return func(*args, **kwargs)
+    return wrapper
+
+
 def number_of_neighbours(e):
     if type(e) is np.ndarray:
         n = array_to_binary(e)
@@ -79,21 +89,13 @@ def _number_of_bits_high(n: int):
     return bin(n).count('1')
 
 
-def number_of_connected_neighbours(e):
-    if type(e) is np.ndarray:
-        n = array_to_binary(e)
-    else:
-        n = e
-
+@array_to_binary_wrapper
+def number_of_connected_neighbours(n):
     return _number_of_01_patterns_in_ordered_neighbours_set(n)
 
 
-def number_of_connected_second_neighbours(e):
-    if type(e) is np.ndarray:
-        n = second_neighbours_array_to_binary(e)
-    else:
-        n = e
-
+@array_to_binary_wrapper
+def number_of_connected_second_neighbours(n):
     return _number_of_01_patterns_in_ordered_second_neighbours_set(n)
 
 
@@ -129,15 +131,23 @@ def _number_of_01_patterns_in_ordered_second_neighbours_set(n):
     return cnt
 
 
-def is_top_left_corner_of_square(e):
-    if type(e) is np.ndarray:
-        n = array_to_binary(e)
-    else:
-        n = e
-
+@array_to_binary_wrapper
+def is_top_left_corner_of_square(n):
     mask = 0b00011100
-
     return mask & n == mask
+
+
+@array_to_binary_wrapper
+def number_of_side_neighbours(n):
+    mask = 0b01010101
+    return bin(mask & n).count('1')
+
+
+@array_to_binary_wrapper
+def number_of_diagonal_neighbours(n):
+    mask = 0b10101010
+    return bin(mask & n).count('1')
+
 
 
 
