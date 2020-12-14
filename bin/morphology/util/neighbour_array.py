@@ -175,6 +175,7 @@ def distinct_edges(b):
 
 def distinct_edge_array(array: np.ndarray):
     neighbour_array = get_neighbour_array(array)
+    neighbour_array[array == 0] = 0
     return _distinct_edges_vectorised(neighbour_array)
 
 
@@ -206,23 +207,19 @@ def _distinct_edges_vectorised(b: np.ndarray):
                        0b00100000,
                        0b10000000]
 
-    b_mask_cycle = [0b10000011,
-                    0b00001110,
-                    0b00111000,
-                    0b11100000,
-                    0b00000111,
-                    0b00011100,
-                    0b01110000,
-                    0b11000001]
+    b_mask_cycle = [0b01111100,
+                    0b11110001,
+                    0b11000111,
+                    0b00011111,
+                    0b11111000,
+                    0b11100011,
+                    0b10001111,
+                    0b00111110]
 
     while b.any():
-        edge_mask = b & binary_array(1 << (i % 7))
+        edge_mask = b & binary_array(edge_mask_cycle[i])
         edges = np.where(edge_mask, edges | edge_mask, edges)
-        b = np.where(edge_mask,
-                     b & binary_array(0b11111111 - ((1 << (7 + i) % 8)
-                                                    + (1 << (1 + i) % 8)
-                                                    + (1 << i % 8))),
-                     b)
+        b = np.where(edge_mask, b & binary_array(b_mask_cycle[i]), b)
         i += 1
 
     return edges
