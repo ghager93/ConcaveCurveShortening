@@ -77,13 +77,17 @@ def zhan_suen(array: np.ndarray):
     out = np.copy(array)
     for i in range(MAX_ZHAN_SUEN_ITERATIONS):
         criteria_mask = _zs_get_criteria_mask(out)
-        if not (any(out[criteria_mask == FIRST_ITERATION]) | any(out[criteria_mask == BOTH_ITERATIONS])):
+        if not (any(out[criteria_mask == FIRST_ITERATION])
+                | any(out[criteria_mask == SECOND_ITERATION])
+                | any(out[criteria_mask == BOTH_ITERATIONS])):
             break
         out[criteria_mask == FIRST_ITERATION] = 0
         out[criteria_mask == BOTH_ITERATIONS] = 0
 
         criteria_mask = _zs_get_criteria_mask(out)
-        if not (any(out[criteria_mask == SECOND_ITERATION]) | any(out[criteria_mask == BOTH_ITERATIONS])):
+        if not (any(out[criteria_mask == FIRST_ITERATION])
+                | any(out[criteria_mask == SECOND_ITERATION])
+                | any(out[criteria_mask == BOTH_ITERATIONS])):
             break
         out[criteria_mask == SECOND_ITERATION] = 0
         out[criteria_mask == BOTH_ITERATIONS] = 0

@@ -22,18 +22,18 @@ def binary_to_array(b: int):
 def array_to_binary(array: np.ndarray):
     assert array.shape == (3, 3)
 
-    return array[0, 1] + (array[0, 2] << 1) + (array[1, 2] << 2) + (array[2, 2] << 3) + \
-           (array[2, 1] << 4) + (array[2, 0] << 5) + (array[1, 0] << 6) + (array[0, 0] << 7)
+    return array[0, 1] + (array[0, 2] << 1) + (array[1, 2] << 2) + (array[2, 2] << 3) \
+           + (array[2, 1] << 4) + (array[2, 0] << 5) + (array[1, 0] << 6) + (array[0, 0] << 7)
 
 
 def second_neighbours_array_to_binary(arr: np.ndarray):
     assert arr.shape == (5, 5)
 
-    mask = np.array([[2**15, 1, 2, 4, 8],
-                     [2**14, 0, 0, 0, 16],
-                     [2**13, 0, 0, 0, 32],
-                     [2**12, 0, 0, 0, 64],
-                     [2**11, 1024, 512, 256, 128]])
+    mask = np.array([[2 ** 15, 1, 2, 4, 8],
+                     [2 ** 14, 0, 0, 0, 16],
+                     [2 ** 13, 0, 0, 0, 32],
+                     [2 ** 12, 0, 0, 0, 64],
+                     [2 ** 11, 1024, 512, 256, 128]])
 
     return np.sum(mask * arr)
 
@@ -50,7 +50,7 @@ def get_neighbour_array(array: np.ndarray):
 
 def get_shifted_neighbour_arrays(array: np.ndarray):
     padded_array = pad_by_zeroes(array)
-    return [padded_array[x:padded_array.shape[0] + x-2, y:padded_array.shape[1] + y-2]
+    return [padded_array[x:padded_array.shape[0] + x - 2, y:padded_array.shape[1] + y - 2]
             for x in range(3) for y in range(3)
             if x != 1 or y != 1]
 
@@ -59,8 +59,9 @@ def array_to_binary_wrapper(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         args = [array_to_binary(a) if type(a) is np.ndarray else a for a in args]
-        kwargs = {kw:(array_to_binary(a) if type(a) is np.ndarray else a) for (kw, a) in kwargs.items()}
+        kwargs = {kw: (array_to_binary(a) if type(a) is np.ndarray else a) for (kw, a) in kwargs.items()}
         return func(*args, **kwargs)
+
     return wrapper
 
 
@@ -150,6 +151,16 @@ def distinct_edges(b):
     edges = 0
     i = 0
 
+    if b & 0b00000111 == 0b00000111:
+        edges |= 0b00000001
+        b &= 0b11111000
+    if b & 0b11000001 == 0b11000001:
+        edges |= 0b10000000
+        b &= 0b00111110
+    if b & 0b01110000 == 0b01110000:
+        edges |= 0b01000000
+        b &= 0b10001111
+
     while b:
         edge_mask = 1 << (i % 7)
         if b & edge_mask:
@@ -162,4 +173,93 @@ def distinct_edges(b):
     return edges
 
 
+def distinct_edge_array(array: np.ndarray):
+    neighbour_array = get_neighbour_array(array)
+    return _distinct_edges_vectorised(neighbour_array)
 
+
+def _distinct_edges_vectorised(b: np.ndarray):
+    edges = np.zeros(b.shape, dtype=int)
+    i = 0
+
+    def binary_array(n):
+        return np.full(b.shape, n)
+
+    square_mask = b & binary_array(0b00000111) == binary_array(0b00000111)
+    edges = np.where(square_mask, edges | binary_array(0b00000001), edges)
+    b = np.where(square_mask, b & binary_array(0b11111000), b)
+
+    square_mask = b & binary_array(0b11000001) == binary_array(0b11000001)
+    edges = np.where(square_mask, edges | binary_array(0b10000000), edges)
+    b = np.where(square_mask, b & binary_array(0b00111110), b)
+
+    square_mask = b & binary_array(0b01110000) == binary_array(0b01110000)
+    edges = np.where(square_mask, edges | binary_array(0b01000000), edges)
+    b = np.where(square_mask, b & binary_array(0b10001111), b)
+
+    edge_mask_cycle = [0b00000001,
+                       0b00000100,
+                       0b00010000,
+                       0b01000000,
+                       0b00000010,
+                       0b00001000,
+                       0b00100000,
+                       0b10000000]
+
+    b_mask_cycle = [0b10000011,
+                    0b00001110,
+                    0b00111000,
+                    0b11100000,
+                    0b00000111,
+                    0b00011100,
+                    0b01110000,
+                    0b11000001]
+
+    while b.any():
+        edge_mask = b & binary_array(1 << (i % 7))
+        edges = np.where(edge_mask, edges | edge_mask, edges)
+        b = np.where(edge_mask,
+                     b & binary_array(0b11111111 - ((1 << (7 + i) % 8)
+                                                    + (1 << (1 + i) % 8)
+                                                    + (1 << i % 8))),
+                     b)
+        i += 1
+
+    return edges
+
+
+def _distinct_edges_vectorised2(b: np.ndarray):
+    edges = np.zeros(b.shape, dtype=int)
+    i = 0
+
+    binary_map = np.array([np.full(b.shape, 1 << i) for i in range(8)])
+
+    def binary_array(n):
+        out = np.zeros(b.shape, dtype=int)
+        for j in range(8):
+            out += (n & (1 << j)) * binary_map[j]
+        return out
+
+    square_mask = b & binary_array(0b00000111) == binary_array(0b00000111)
+    edges = np.where(square_mask, edges | binary_array(0b00000001), edges)
+    b = np.where(square_mask, b & binary_array(0b11111000), b)
+
+    square_mask = b & binary_array(0b11000001) == binary_array(0b11000001)
+    edges = np.where(square_mask, edges | binary_array(0b10000000), edges)
+    b = np.where(square_mask, b & binary_array(0b00111110), b)
+
+    square_mask = b & binary_array(0b01110000) == binary_array(0b01110000)
+    edges = np.where(square_mask, edges | binary_array(0b01000000), edges)
+    b = np.where(square_mask, b & binary_array(0b10001111), b)
+
+    while b.any():
+        edge_mask = b & binary_array(1 << (i % 7))
+        edges = np.where(edge_mask, edges | edge_mask, edges)
+        b = np.where(edge_mask,
+                     b & binary_array(0b11111111 - ((1 << (7 + i) % 8)
+                                                    + (1 << (1 + i) % 8)
+                                                    + (1 << i % 8))),
+                     b)
+        i += 2
+
+    return edges
