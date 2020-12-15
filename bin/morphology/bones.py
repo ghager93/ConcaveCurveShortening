@@ -8,20 +8,31 @@ from .util.neighbour_array import neighbour_coordinates
 
 
 class Bone(tuple):
+    def __eq__(self, other):
+        return ((self.start() == other.start()) & (self.end() == other.end()))\
+               | ((self.start() == other.end()) & (self.end() == other.start()))
+
+    def __hash__(self):
+        hash_ = 0
+        if len(self) > 0:
+            hash_ += super.__hash__(self[0])
+        if len(self) > 1:
+            hash_ += super.__hash__(self[-1])
+        if len(self) > 2:
+            hash_ += super.__hash__(self[1:-1])
+
+        return hash_
+
     def start(self):
         return self[0]
 
     def end(self):
         return self[-1]
 
-    def __eq__(self, other):
-        return ((self.start() == other.start()) & (self.end() == other.end()))\
-               | ((self.start() == other.end()) & (self.end() == other.start()))
-
 
 def bones(skeleton_graph: SkeletonGraph):
     visited = set()
-    bones = list()
+    bones = set()
 
     for joint in skeleton_graph.joints():
         unvisited_neighbours = {joint + n for n in neighbour_coordinates(skeleton_graph.edges[joint])} - visited
@@ -33,7 +44,6 @@ def bones(skeleton_graph: SkeletonGraph):
                 node = ({node + n for n in neighbour_coordinates(skeleton_graph.edges[node])}
                         - (visited | {joint})).pop()
             bone.append(node)
-            if bone not in bones:
-                bones.append(bone)
+            bones.add(bone)
 
     return bones
