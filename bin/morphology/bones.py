@@ -7,9 +7,7 @@ from .skeleton_graph import SkeletonGraph
 from .util.neighbour_array import neighbour_coordinates
 
 
-class Bone(list):
-
-
+class Bone(tuple):
     def start(self):
         return self[0]
 
