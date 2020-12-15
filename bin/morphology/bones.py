@@ -30,16 +30,16 @@ class Bone(tuple):
         return self[-1]
 
 
-class JointGraph(dict):
-    def __init__(self, joints, bones):
+class BoneGraph(dict):
+    def __init__(self, vertices, bones):
         super().__init__()
-        self.joints = joints
+        self.vertices = vertices
         self.bones = bones
         self._build_graph()
 
     def _build_graph(self):
-        for joint in self.joints:
-            self[joint] = set()
+        for vertex in self.vertices:
+            self[vertex] = set()
 
         for bone in self.bones:
             self[bone.start()].add(bone.end())
@@ -50,15 +50,15 @@ def bones(skeleton_graph: SkeletonGraph):
     visited = set()
     bones = set()
 
-    for joint in skeleton_graph.joints():
-        unvisited_neighbours = {joint + n for n in neighbour_coordinates(skeleton_graph.edges[joint])} - visited
+    for vertex in skeleton_graph.vertices():
+        unvisited_neighbours = {vertex + n for n in neighbour_coordinates(skeleton_graph.edges[vertex])} - visited
         for node in unvisited_neighbours:
-            bone = [joint]
-            while node not in skeleton_graph.joints():
+            bone = [vertex]
+            while node not in skeleton_graph.vertices():
                 bone.append(node)
                 visited.add(node)
                 node = ({node + n for n in neighbour_coordinates(skeleton_graph.edges[node])}
-                        - (visited | {joint})).pop()
+                        - (visited | {vertex})).pop()
             bone.append(node)
             bones.add(Bone(bone))
 

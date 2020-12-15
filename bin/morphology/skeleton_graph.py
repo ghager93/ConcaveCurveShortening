@@ -14,12 +14,12 @@ class SkeletonGraph:
         self.ends = skeleton_ops.end_points(self.skeleton)
         self.branches = skeleton_ops.branch_points(self.skeleton)
         self.root = skeleton_ops.image_root(self.image, self.skeleton)
-        self.joint_graph = bones.JointGraph(self.joints(), bones.bones(self))
+        self.bone_graph = bones.BoneGraph(self.vertices(), bones.bones(self))
 
-    def joints(self):
+    def vertices(self):
         return self.ends | self.branches | {self.root}
 
-    def joints_array(self):
+    def vertices_array(self):
         out = np.zeros(self.skeleton.shape, int)
-        out[tuple([x for x in zip(*self.joints())])] = 1
+        out[tuple([x for x in zip(*self.vertices())])] = 1
         return out
