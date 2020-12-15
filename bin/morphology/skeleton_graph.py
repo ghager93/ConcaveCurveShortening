@@ -16,3 +16,8 @@ class SkeletonGraph:
 
     def joints(self):
         return self.ends | self.branches | {self.root}
+
+    def joints_array(self):
+        out = np.zeros(self.skeleton.shape, int)
+        out[tuple([x for x in zip(*self.joints())])] = 1
+        return out
