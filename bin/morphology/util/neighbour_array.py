@@ -62,7 +62,7 @@ def get_shifted_neighbour_arrays(array: np.ndarray):
             if x != 1 or y != 1]
 
 
-def array_to_binary_wrapper(func):
+def _array_to_binary_wrapper(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         args = [array_to_binary(a) if type(a) is np.ndarray else a for a in args]
@@ -72,7 +72,7 @@ def array_to_binary_wrapper(func):
     return wrapper
 
 
-@array_to_binary_wrapper
+@_array_to_binary_wrapper
 def number_of_neighbours(n):
     return _number_of_bits_high(n)
 
@@ -93,12 +93,12 @@ def _number_of_bits_high(b: int):
     return bin(b).count('1')
 
 
-@array_to_binary_wrapper
+@_array_to_binary_wrapper
 def number_of_connected_neighbours(b):
     return _number_of_01_patterns_in_ordered_neighbours_set(b)
 
 
-@array_to_binary_wrapper
+@_array_to_binary_wrapper
 def number_of_connected_second_neighbours(b):
     return _number_of_01_patterns_in_ordered_second_neighbours_set(b)
 
@@ -135,25 +135,25 @@ def _number_of_01_patterns_in_ordered_second_neighbours_set(b):
     return cnt
 
 
-@array_to_binary_wrapper
+@_array_to_binary_wrapper
 def is_top_left_corner_of_square(b):
     mask = 0b00011100
     return mask & b == mask
 
 
-@array_to_binary_wrapper
+@_array_to_binary_wrapper
 def number_of_side_neighbours(b):
     mask = 0b01010101
     return bin(mask & b).count('1')
 
 
-@array_to_binary_wrapper
+@_array_to_binary_wrapper
 def number_of_diagonal_neighbours(b):
     mask = 0b10101010
     return bin(mask & b).count('1')
 
 
-@array_to_binary_wrapper
+@_array_to_binary_wrapper
 def neighbour_coordinates(b):
     coords = set()
 

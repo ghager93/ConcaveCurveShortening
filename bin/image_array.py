@@ -29,10 +29,18 @@ def convert_to_image(array: np.ndarray):
 
 
 def convert_to_points_list(array: np.ndarray):
+    return _convert_to_points_list2(array)
+
+
+def _convert_to_points_list(array: np.ndarray):
     csr = csr_matrix(array)
     return [Vector2D(x, y)
             for x in range(csr.shape[0])
             for y in csr.indices[csr.indptr[x]:csr.indptr[x + 1]]]
+
+
+def _convert_to_points_list2(array: np.ndarray):
+    return [Vector2D(p[0], p[1]) for p in zip(*np.where(array))]
 
 
 def boolean_sum(array: np.ndarray):
