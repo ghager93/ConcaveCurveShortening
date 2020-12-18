@@ -1,12 +1,12 @@
 import numpy as np
 
-import _distance_transform
-import _edge_detection
-import _medial_axis_transform
-import _sharpness_transform
-import _skeletonisation
+from . import _distance_transform
+from . import _edge_detection
+from . import _medial_axis_transform
+from . import _sharpness_transform
+from . import _skeletonisation
 
-from util import neighbour_array
+from .util import neighbour_array
 
 
 def skeleton_transform(array: np.ndarray):
