@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Collection
 
 from . import skeleton_ops
 from bin.util.vector2d import Vector2D
@@ -29,9 +30,14 @@ class Bone(tuple):
     def end(self):
         return self[-1]
 
+    def distance_between(self, p1, p2):
+        assert p1 in self and p2 in self
+
+        return abs(self.index(p1) - self.index(p2))
+
 
 class BoneGraph(dict):
-    def __init__(self, vertices, bones):
+    def __init__(self, vertices: Collection[Vector2D], bones: Collection[Bone]):
         super().__init__()
         self.vertices = vertices
         self.bones = bones
@@ -44,6 +50,11 @@ class BoneGraph(dict):
         for bone in self.bones:
             self[bone.start()].add(bone.end())
             self[bone.end()].add(bone.start())
+
+    def find_path_and_distance(self, v1: Vector2D, v2: Vector2D):
+        assert v1 in self.vertices and v2 in self.vertices
+
+
 
 
 def bones(skeleton_graph: SkeletonGraph):
