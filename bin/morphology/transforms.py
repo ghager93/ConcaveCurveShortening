@@ -1,5 +1,7 @@
 import numpy as np
 
+from skimage.morphology import skeletonize
+
 from . import _distance_transform
 from . import _edge_detection
 from . import _medial_axis_transform
@@ -10,7 +12,7 @@ from .util import neighbour_array
 
 
 def skeleton_transform(array: np.ndarray):
-    return _skeletonisation.zhan_suen(array)
+    return skeletonize(array)
 
 
 def medial_axis_transform(array: np.ndarray):

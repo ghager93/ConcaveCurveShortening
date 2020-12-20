@@ -4,7 +4,6 @@ from typing import Collection
 from . import skeleton_ops
 from bin.util.vector2d import Vector2D
 
-from .skeleton_graph import SkeletonGraph
 from .util.neighbour_array import neighbour_coordinates
 
 
@@ -41,6 +40,7 @@ class BoneGraph(dict):
         super().__init__()
         self.vertices = vertices
         self.bones = bones
+        self.distance_dictionary = dict()
         self._build_graph()
 
     def _build_graph(self):
@@ -51,26 +51,38 @@ class BoneGraph(dict):
             self[bone.start()].add(bone.end())
             self[bone.end()].add(bone.start())
 
-    def find_path_and_distance(self, v1: Vector2D, v2: Vector2D):
-        assert v1 in self.vertices and v2 in self.vertices
 
-
-
-
-def bones(skeleton_graph: SkeletonGraph):
+def bones(skeleton_graph):
     visited = set()
     bones = set()
 
+    # for vertex in skeleton_graph.vertices():
+    #     unvisited_vertex_neighbours = {vertex + n for n in
+    #                                    neighbour_coordinates(skeleton_graph.edges[vertex])} - visited
+    #     for node in unvisited_vertex_neighbours:
+    #         bone = [vertex]
+    #         while node not in skeleton_graph.vertices():
+    #             bone.append(node)
+    #             visited.add(node)
+    #             unvisited_node_neighbours = {node + n for n in
+    #                                          neighbour_coordinates(skeleton_graph.edges[node])} - visited
+    #             if len(bone) <= 2:
+    #                 unvisited_node_neighbours -= {vertex}
+    #             node = unvisited_node_neighbours.pop()
+    #         bone.append(node)
+    #         bones.add(Bone(bone))
+
     for vertex in skeleton_graph.vertices():
-        unvisited_neighbours = {vertex + n for n in neighbour_coordinates(skeleton_graph.edges[vertex])} - visited
-        for node in unvisited_neighbours:
-            bone = [vertex]
-            while node not in skeleton_graph.vertices():
-                bone.append(node)
-                visited.add(node)
-                node = ({node + n for n in neighbour_coordinates(skeleton_graph.edges[node])}
-                        - (visited | {vertex})).pop()
-            bone.append(node)
-            bones.add(Bone(bone))
+        vertex_edges = {vertex + p for p in neighbour_coordinates(skeleton_graph.edges[vertex])}
+        for edge in vertex_edges:
+            if edge not in visited:
+                bone = [vertex]
+                while edge not in skeleton_graph.vertices():
+                    bone.append(edge)
+                    visited.add(edge)
+                    edge, = {edge + n for n in neighbour_coordinates(skeleton_graph.edges[edge])} - {bone[-2]}
+                bone.append(edge)
+                bones.add(Bone(bone))
 
     return bones
+

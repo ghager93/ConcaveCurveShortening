@@ -31,6 +31,14 @@ def skeleton_mapping(skeleton, edges):
     return dictionary
 
 
+@_array_to_points_list_wrapper
+def mapping_distance_transform(image, tree):
+    out = np.zeros(image.shape)
+    out[tuple(p for p in zip(*image))] = tree.query(image)[0]
+
+    return out
+
+
 def _main():
     edges = np.zeros((9, 9), int)
     edges[(1, 4, 1, 5, 1, 6, 8, 2), (2, 2, 3, 3, 4, 6, 7, 8)] = 1
