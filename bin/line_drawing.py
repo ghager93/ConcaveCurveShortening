@@ -13,8 +13,6 @@ def bresenham(p1: Vector2D, p2: Vector2D):
     else:
         deltaerr = math.nan
 
-    print(deltax, deltay, deltaerr)
-
     def _delta_error_less_than_one():
         y = p1.y
         error = 0
@@ -62,12 +60,12 @@ def bresenham(p1: Vector2D, p2: Vector2D):
     return line
 
 
-def draw_line(p1: Vector2D, p2: Vector2D):
-    mat = normalised_line_as_matrix(p1, p2)
+def _draw_line(p1: Vector2D, p2: Vector2D):
+    mat = _normalised_line_as_matrix(p1, p2)
     show(np.pad(mat, 1))
 
 
-def normalised_line_as_matrix(p1: Vector2D, p2: Vector2D):
+def _normalised_line_as_matrix(p1: Vector2D, p2: Vector2D):
     p1, p2 = _normalise_points(p1, p2)
     line = bresenham(p1, p2)
     mat = np.zeros((abs(p1.x-p2.x)+1, abs(p1.y-p2.y)+1), int)
@@ -85,8 +83,8 @@ def _normalise_points(p1, p2):
     return Vector2D(p1.x - minx, p1.y - miny), Vector2D(p2.x - minx, p2.y - miny)
 
 
-def draw_lines_of_circle(p: Vector2D, r: float, num=16):
-    show_multiple([normalised_line_as_matrix(p, Vector2D(int(r * np.cos(theta)), int(r * np.sin(theta))) + p)
+def _draw_lines_of_circle(p: Vector2D, r: float, num=16):
+    show_multiple([_normalised_line_as_matrix(p, Vector2D(int(r * np.cos(theta)), int(r * np.sin(theta))) + p)
                    for theta in np.linspace(0, 2*np.pi, num=num, endpoint=False)])
 
 
@@ -96,6 +94,6 @@ def _line_range(start, end):
 
 if __name__ == '__main__':
     a = Vector2D(2, 4)
-    draw_lines_of_circle(a, 10)
+    _draw_lines_of_circle(a, 10)
 
 
