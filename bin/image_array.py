@@ -43,6 +43,12 @@ def _convert_to_points_list2(array: np.ndarray):
     return [Vector2D(p[0], p[1]) for p in zip(*np.where(array))]
 
 
+def from_points_list(points, shape):
+    arr = np.zeros(shape, int)
+    arr[tuple(p for p in zip(*points))] = 1
+    return arr
+
+
 def boolean_sum(array: np.ndarray):
     return np.sum(array > 0)
 

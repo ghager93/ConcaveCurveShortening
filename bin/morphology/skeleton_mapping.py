@@ -31,10 +31,10 @@ def skeleton_mapping(skeleton, edges):
     return dictionary
 
 
-@_array_to_points_list_wrapper
 def mapping_distance_transform(image, tree):
     out = np.zeros(image.shape)
-    out[tuple(p for p in zip(*image))] = tree.query(image)[0]
+    points_list = convert_to_points_list(image)
+    out[tuple(p for p in zip(*points_list))] = tree.query(points_list)[0]
 
     return out
 
