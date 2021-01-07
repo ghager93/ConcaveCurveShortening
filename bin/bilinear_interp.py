@@ -2,6 +2,8 @@ import numpy as np
 
 # https://stackoverflow.com/questions/12729228/simple-efficient-bilinear-interpolation-of-images-in-numpy-and-python
 def bilinear_interpolate(im, x, y):
+    im = np.pad(im, ((0, 1), (0, 1)), 'constant')
+
     x = np.asarray(x)
     y = np.asarray(y)
 
@@ -10,10 +12,10 @@ def bilinear_interpolate(im, x, y):
     y0 = np.floor(y).astype(int)
     y1 = y0 + 1
 
-    x0 = np.clip(x0, 0, im.shape[1]-1);
-    x1 = np.clip(x1, 0, im.shape[1]-1);
-    y0 = np.clip(y0, 0, im.shape[0]-1);
-    y1 = np.clip(y1, 0, im.shape[0]-1);
+    x0 = np.clip(x0, 0, im.shape[1]-1)
+    x1 = np.clip(x1, 0, im.shape[1]-1)
+    y0 = np.clip(y0, 0, im.shape[0]-1)
+    y1 = np.clip(y1, 0, im.shape[0]-1)
 
     Ia = im[ y0, x0 ]
     Ib = im[ y1, x0 ]
