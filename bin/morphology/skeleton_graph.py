@@ -1,9 +1,13 @@
 import numpy as np
 
+from scipy.spatial import KDTree
+
 from . import skeleton_ops
 from . import transforms
 from . import bones
+from . import skeleton_mapping
 
+from bin.image_array import convert_to_points_list
 from bin.util.vector2d import Vector2D
 
 
@@ -18,6 +22,7 @@ class SkeletonGraph:
         self.root = skeleton_ops.image_root(self.image, self.skeleton)
         self.bone_graph = bones.BoneGraph(self.vertices(), bones.bones(self))
         self.root_distance_map = self._root_distance_map()
+        self.tree = KDTree(convert_to_points_list(self.skeleton))
 
     def vertices(self):
         return self.ends | self.branches | {self.root}
@@ -53,4 +58,7 @@ class SkeletonGraph:
 
         return d_map
 
+    def root_distance_array(self):
+        out = np.zeros(self.image.shape, int)
+        out[]
 
