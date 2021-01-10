@@ -3,9 +3,13 @@ import numpy as np
 from . import bilinear_interp
 
 
-def bilinear_interp_upsample(im: np.ndarray, resolution, upsample_factor):
-    ix = np.linspace(0, resolution[1] * resolution, resolution[1], endpoint=False)
-    iy = np.linspace(0, resolution[0] * resolution, resolution[0], endpoint=False)
+def upsample(image: np.ndarray, resolution, ratio):
+    return _bilinear_interp_upsample(image, resolution, ratio)
+
+
+def _bilinear_interp_upsample(im: np.ndarray, resolution, ratio):
+    ix = np.linspace(0, resolution[1] * ratio, resolution[1], endpoint=False)
+    iy = np.linspace(0, resolution[0] * ratio, resolution[0], endpoint=False)
 
     mx, my = np.meshgrid(ix, iy)
 

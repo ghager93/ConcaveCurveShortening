@@ -21,3 +21,4 @@ def skeleton_map(skeleton: SkeletonGraph):
     root_map[tuple(p for p in zip(*image_points))] = [skeleton.distance_to_root(skeleton_points[q]) for q in pairs]
 
     return distance_map + root_map
+

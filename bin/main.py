@@ -1,29 +1,44 @@
 import numpy as np
 
-from scipy.spatial import KDTree
+from . import decimate_image
 
-from util import get_test_objects
+from .upsample import upsample
 
-from morphology import transforms
-from morphology import skeleton_graph
+from .image_array import point_map_to_image, convert_to_points_list
 
-from image_array import convert_to_points_list, show
+from .morphology import transforms
+from .morphology import skeleton_tree
+
+from .morphology.skeleton_ops import image_root
+
+from .morphology.skeleton_graph import skeleton_to_root_distance_map
 
 
-image_array = get_test_objects.get_test_image_array('test2.bmp')
+def morphological_distance_image(image, ratio=0.1):
+    decimated_image = decimate_image.decimate(image, ratio)
+    decimated_image_points = convert_to_points_list(decimated_image)
 
-skeleton = skeleton_graph.SkeletonGraph(image_array)
+    skeleton = transforms.skeleton_transform(image)
+    skeleton_points = convert_to_points_list(skeleton)
 
-skeleton_points = convert_to_points_list(skeleton.skeleton)
-image_points = convert_to_points_list(image_array)
+    body_to_skeleton_distances, body_to_skeleton_pairs = skeleton_tree.skeleton_tree_query(decimated_image_points,
+                                                                                           skeleton_points)
 
-tree = KDTree(skeleton_points)
-distances, pairs = tree.query(image_points)
+    body_to_skeleton_distance_image = point_map_to_image(dict(zip(decimated_image_points, body_to_skeleton_distances)),
+                                                         image.shape)
+    downsized_b2s_distance_image = decimate_image.downsize(body_to_skeleton_distance_image, ratio)
 
-distance_map = np.zeros(image_array.shape)
-distance_map[tuple(p for p in zip(*image_points))] = distances
+    skeleton_to_root_distance_map_ = skeleton_to_root_distance_map(image_root(image, skeleton), skeleton)
+    body_mapped_s2r_image = point_map_to_image(
+        dict(zip(decimated_image_points,
+                 [skeleton_to_root_distance_map_[skeleton_points[p]] for p in body_to_skeleton_pairs])),
+        image.shape
+    )
+    downsized_body_mapped_s2r_image = decimate_image.downsize(body_mapped_s2r_image, ratio)
 
-root_map = np.zeros(image_array.shape)
-root_map[tuple(p for p in zip(*image_points))] = [skeleton.distance_to_root(skeleton_points[q]) for q in pairs]
+    downsized_morph_image = downsized_b2s_distance_image + downsized_body_mapped_s2r_image
+    downsized_morph_image_inverted = np.where(downsized_morph_image != 0, 1 / downsized_morph_image, 0)
+    morph_image_inverted = upsample(downsized_morph_image_inverted, image.shape, ratio)
+    morph_image = np.where(morph_image_inverted != 0, 1 / morph_image_inverted, 0)
 
-show(distance_map + root_map)
+    return morph_image

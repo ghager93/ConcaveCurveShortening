@@ -20,9 +20,8 @@ class SkeletonGraph:
         self.ends = skeleton_ops.end_points(self.skeleton)
         self.branches = skeleton_ops.branch_points(self.skeleton)
         self.root = skeleton_ops.image_root(self.image, self.skeleton)
-        self.bone_graph = bones.BoneGraph(self.vertices(), bones.bones(self))
+        # self.bone_graph = bones.BoneGraph(self.vertices(), bones.bones(self))
         self.root_distance_map = self._root_distance_map()
-        self.tree = KDTree(convert_to_points_list(self.skeleton))
 
     def vertices(self):
         return self.ends | self.branches | {self.root}
@@ -58,7 +57,24 @@ class SkeletonGraph:
 
         return d_map
 
-    def root_distance_array(self):
-        out = np.zeros(self.image.shape, int)
-        out[]
 
+def skeleton_to_root_distance_map(root: Vector2D, skeleton: np.ndarray):
+    d_map = dict()
+    stack = [(root, 0)]
+
+    def unvisited_neighbours(node: Vector2D):
+        return [node + (x, y) for x in range(-1, 2) for y in range(-1, 2) if
+                (x, y) != (0, 0) and legal_unvisited_neighbour(node + (x, y))]
+
+    def legal_unvisited_neighbour(n: Vector2D):
+        return 0 <= n.x < skeleton.shape[0] \
+               and 0 <= n.y < skeleton.shape[1] \
+               and skeleton[n] \
+               and n not in d_map.keys()
+
+    while stack:
+        curr, d = stack.pop()
+        d_map[curr] = d
+        stack += [(neighbour, d + 1) for neighbour in unvisited_neighbours(curr)]
+
+    return d_map

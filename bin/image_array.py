@@ -97,6 +97,13 @@ def flatten(array: np.ndarray):
     return array
 
 
+def point_map_to_image(point_map: dict, shape):
+    image = np.zeros(shape, int)
+    image[tuple(p for p in zip(*point_map.keys()))] = list(point_map.values())
+
+    return image
+
+
 def show(array: np.ndarray, close_method: str=CLOSE_METHOD_KEY_PRESS, close_time: int=CLOSE_TIME_DEFAULT):
     plt.imshow(array)
     if close_method == CLOSE_METHOD_KEY_PRESS:
