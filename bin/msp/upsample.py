@@ -1,6 +1,6 @@
 import numpy as np
 
-from . import bilinear_interp
+from bin.msp import bilinear_interp
 
 
 def upsample(image: np.ndarray, resolution, ratio):

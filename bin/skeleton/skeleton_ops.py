@@ -1,8 +1,8 @@
 import numpy as np
 
-from bin.util.vector2d import Vector2D
-from .util import neighbour_array, branch_point_lookup_calculator, distinct_edges_lookup_calculator
-from .transforms import distance_transform, neighbours_transform
+from bin.utils.vector2d import Vector2D
+from bin.morphology.utils import neighbour_array, branch_point_lookup_calculator, distinct_edges_lookup_calculator
+from bin.morphology.transforms import distance_transform, neighbours_transform
 
 
 def branch_points(skeleton: np.ndarray):

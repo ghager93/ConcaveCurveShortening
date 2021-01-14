@@ -1,7 +1,9 @@
 from unittest import TestCase
 
 from bin.image_array import *
-from bin.util.base_dir import base_dir
+from bin.utils.base_dir import base_dir
+from bin.utils.imshow import show
+
 
 class Test(TestCase):
     test_belize_image_path = base_dir + '/lib/silhouettes/belize-silhouette.bmp'

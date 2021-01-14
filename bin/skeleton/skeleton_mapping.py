@@ -4,7 +4,7 @@ from scipy.spatial import KDTree
 from typing import List
 from pprint import pprint
 
-from . import transforms
+from bin.morphology import transforms
 
 from bin.image_array import convert_to_points_list
 

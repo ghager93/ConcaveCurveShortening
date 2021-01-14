@@ -1,8 +1,5 @@
-import numpy as np
-
-from bin.morphology.util import neighbour_array
-from bin.util import get_test_objects
-from bin.morphology import transforms
+from bin.morphology.utils import neighbour_array
+from bin.tests.utils import get_test_objects
 
 
 def test_distinct_edge_array():

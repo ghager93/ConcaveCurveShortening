@@ -2,8 +2,8 @@ from time import time
 from time import strftime
 
 import bin.morphology.structuring_element
-from bin.util.base_dir import base_dir
-from bin.util.get_test_objects import get_test_image_array
+from bin.utils.base_dir import base_dir
+from bin.tests.utils.get_test_objects import get_test_image_array
 import bin.morphology as morphology
 
 array = get_test_image_array()

@@ -1,14 +1,9 @@
 import numpy as np
 
-from scipy.spatial import KDTree
+from bin.skeleton import skeleton_ops
+from bin.morphology import transforms
 
-from . import skeleton_ops
-from . import transforms
-from . import bones
-from . import skeleton_mapping
-
-from bin.image_array import convert_to_points_list
-from bin.util.vector2d import Vector2D
+from bin.utils.vector2d import Vector2D
 
 
 class SkeletonGraph:

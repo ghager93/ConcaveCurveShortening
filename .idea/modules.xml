@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/mapScaler.iml" filepath="$PROJECT_DIR$/.idea/mapScaler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../morphoscale/.idea/morphoscale.iml" filepath="$PROJECT_DIR$/../morphoscale/.idea/morphoscale.iml" />
     </modules>
   </component>
 </project>

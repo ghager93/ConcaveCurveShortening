@@ -1,7 +1,7 @@
 import numpy as np
 
 from . import neighbour_array
-from bin.util.base_dir import base_dir
+from bin.utils.base_dir import base_dir
 
 UPPER_LIMIT = 256
 

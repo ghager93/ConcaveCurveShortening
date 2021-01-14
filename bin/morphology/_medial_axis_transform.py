@@ -1,8 +1,9 @@
 import numpy as np
 
+import bin.utils.imshow
 from bin import image_array
 from bin.morphology import _distance_transform, _sharpness_transform
-from bin.morphology.util import neighbour_array
+from bin.morphology.utils import neighbour_array
 
 
 def medial_axis_transform(array: np.ndarray):
@@ -33,7 +34,7 @@ def ranking(array: np.ndarray):
 def _test_connection_criteria():
     for n in range(256):
         if _can_delete(n):
-            image_array.show(neighbour_array.binary_to_array(n))
+            bin.utils.imshow.show(neighbour_array.binary_to_array(n))
 
 
 def _create_delete_lookup_array():

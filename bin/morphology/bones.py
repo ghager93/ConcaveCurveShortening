@@ -1,10 +1,8 @@
-import numpy as np
 from typing import Collection
 
-from . import skeleton_ops
-from bin.util.vector2d import Vector2D
+from bin.utils.vector2d import Vector2D
 
-from .util.neighbour_array import neighbour_coordinates
+from .utils.neighbour_array import neighbour_coordinates
 
 
 class Bone(tuple):

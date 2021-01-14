@@ -1,6 +1,6 @@
 import numpy as np
 
-from bin.util.vector2d import Vector2D
+from bin.utils.vector2d import Vector2D
 
 
 KERNEL_FILL_VALUE = 1

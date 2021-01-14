@@ -2,7 +2,7 @@ import numpy as np
 from functools import wraps
 
 from bin.image_array import pad_by_zeroes
-from bin.util.vector2d import Vector2D
+from bin.utils.vector2d import Vector2D
 
 
 def binary_to_array(b: int):

@@ -1,6 +1,6 @@
 import numpy as np
 
-from bin.morphology.util.neighbour_array import get_shifted_neighbour_arrays
+from bin.morphology.utils.neighbour_array import get_shifted_neighbour_arrays
 
 
 def sharpness_transform(array: np.ndarray):

@@ -4,12 +4,13 @@ import time
 
 from scipy.spatial import KDTree
 
+import bin.utils.imshow
 from bin import image
 from bin import image_array
 
 from bin.morphology import transforms
 
-from bin.util.base_dir import base_dir
+from bin.utils.base_dir import base_dir
 
 im = image.open_image(base_dir + 'lib/silhouettes/afghanistan-silhouette.bmp')
 im = image.scale(im, 0.05)
@@ -27,7 +28,7 @@ for i in range(4):
 
     arr2 = np.copy(arr)
     arr2[tuple(p for p in zip(*arr_points))] = 2
-    image_array.show(arr2)
+    bin.utils.imshow.show(arr2)
 
     tree = KDTree(skl_points)
     print('skl size', len(skl_points))

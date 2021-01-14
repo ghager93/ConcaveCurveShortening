@@ -1,18 +1,17 @@
 import numpy as np
 
-from . import decimate_image
+from .msp import decimate_image
 
-from .upsample import upsample
+from bin.msp.upsample import upsample
 
 from .image_array import point_map_to_image, convert_to_points_list
 
 from .morphology import transforms
-from .morphology import skeleton_tree
+from .skeleton import skeleton_tree
 
-from .morphology.skeleton_ops import image_root
+from bin.skeleton.skeleton_ops import image_root
 
-from .morphology.skeleton_graph import skeleton_to_root_distance_map
-
+from bin.skeleton.skeleton_graph import skeleton_to_root_distance_map
 
 def morphological_distance_image(image, ratio=0.1):
     decimated_image = decimate_image.decimate(image, ratio)

@@ -1,4 +1,4 @@
-from bin.util.base_dir import base_dir
+from bin.utils.base_dir import base_dir
 
 CRITERIA_NOT_MET = 0
 FIRST_ITERATION = 1

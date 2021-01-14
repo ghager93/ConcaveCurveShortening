@@ -1,6 +1,6 @@
 import numpy as np
 
-from bin.morphology.util import neighbour_array
+from bin.morphology.utils import neighbour_array
 
 
 def remove_points_with_2_connected_neighbours(array: np.ndarray):

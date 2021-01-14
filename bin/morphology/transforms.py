@@ -7,8 +7,10 @@ from . import _edge_detection
 from . import _medial_axis_transform
 from . import _sharpness_transform
 from . import _skeletonisation
+from . import operations
 
-from .util import neighbour_array
+from .structuring_element import StructuringElement
+from .utils import neighbour_array
 
 
 def skeleton_transform(array: np.ndarray):
@@ -37,6 +39,9 @@ def neighbours_transform(array: np.ndarray, hang: bool = True):
     else:
         return neighbour_array.get_neighbour_array_no_hang(array)
 
+
+def smooth(array: np.ndarray, factor: int):
+    return operations.opening(array, StructuringElement((factor, factor)))
 
 
 

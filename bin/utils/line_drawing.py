@@ -1,8 +1,8 @@
 import numpy as np
 import math
 
-from bin.util.vector2d import Vector2D
-from bin.image_array import show, show_multiple
+from bin.utils.vector2d import Vector2D
+from bin.utils.imshow import show, show_multiple
 
 
 def bresenham(p1: Vector2D, p2: Vector2D):

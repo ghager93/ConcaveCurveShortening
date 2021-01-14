@@ -4,7 +4,7 @@ from bin.morphology import _operations
 from bin.morphology import _skeletonisation
 from bin.morphology.structuring_element import StructuringElement
 
-from bin.util.vector2d import Vector2D
+from bin.utils.vector2d import Vector2D
 
 
 def erosion(array: np.ndarray, structuring_element: StructuringElement):

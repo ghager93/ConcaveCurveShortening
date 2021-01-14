@@ -2,8 +2,8 @@ import numpy as np
 
 from bin import image_array as image_array
 from bin.morphology._operations import binary_erosion, binary_opening
-from bin.morphology.structuring_element import StructuringElement, \
-    _assert_structuring_element_smaller_than_or_equal_to_array
+from bin.morphology.structuring_element import StructuringElement
+from bin.morphology.structuring_element import _assert_structuring_element_smaller_than_or_equal_to_array
 from lib.lookup.zhan_suen_neighbour_lookup import FIRST_ITERATION, BOTH_ITERATIONS, SECOND_ITERATION, NEIGHBOUR_LOOKUP
 
 MAX_LANTUEJOULS_ITERATIONS = 500

@@ -1,7 +1,6 @@
 import numpy as np
 
 import bin.image_array as image_array
-import bin.image_array_ops as image_array_ops
 import bin.morphology._edge_detection
 from bin.morphology import _operations
 
