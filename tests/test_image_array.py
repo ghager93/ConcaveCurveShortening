@@ -1,7 +1,8 @@
 from unittest import TestCase
 
-from bin.image_array import *
+from bin.adj_image_array import *
 from bin.utils.base_dir import base_dir
+from bin.utils.image import convert_to_points_list
 from bin.utils.imshow import show
 
 

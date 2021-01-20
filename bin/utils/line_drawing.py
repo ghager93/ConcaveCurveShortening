@@ -5,6 +5,7 @@ from bin.utils.vector2d import Vector2D
 from bin.utils.imshow import show, show_multiple
 
 
+# https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 def bresenham(p1: Vector2D, p2: Vector2D):
     deltax = p2.x - p1.x
     deltay = p2.y - p1.y

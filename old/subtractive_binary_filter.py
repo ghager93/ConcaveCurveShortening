@@ -1,6 +1,6 @@
 import numpy as np
 
-import bin.image_array as image_array
+import bin.adj_image_array as image_array
 
 
 FILTER_FILL_VALUE = 1

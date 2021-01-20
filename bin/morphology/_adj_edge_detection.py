@@ -1,7 +1,7 @@
 import numpy as np
 
-from bin import image_array as image_array
-from bin.morphology import _operations, structuring_element
+from bin import adj_image_array as image_array
+from bin.morphology import _adj_operations, adj_structuring_element
 
 
 def edge_detect(array: np.ndarray):
@@ -15,5 +15,5 @@ def _xor_edge_detect(array: np.ndarray):
 
 
 def _morphology_edge_detect(array: np.ndarray):
-    eroded_array = _operations.binary_erosion(array, structuring_element.circular_structuring_element(radius=3))
+    eroded_array = _adj_operations.binary_erosion(array, adj_structuring_element.circular_structuring_element(radius=3))
     return array - eroded_array

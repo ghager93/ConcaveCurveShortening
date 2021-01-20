@@ -6,7 +6,7 @@ from pprint import pprint
 
 from bin.morphology import transforms
 
-from bin.image_array import convert_to_points_list
+from bin.utils.image import convert_to_points_list
 
 
 def _array_to_points_list_wrapper(func):

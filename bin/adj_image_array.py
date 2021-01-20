@@ -1,14 +1,10 @@
 import numpy as np
 from PIL import Image
-from scipy.sparse import csr_matrix
 import matplotlib
 
-from bin import flood_fill as flood_fill
+from bin import adj_flood_fill as flood_fill
 
 matplotlib.use('TkAgg')
-
-from bin.utils.vector2d import Vector2D
-
 
 CLOSE_METHOD_KEY_PRESS = 'key_press'
 CLOSE_METHOD_TIMER = 'timer'
@@ -28,21 +24,6 @@ def convert_image_to_binary_array(image: Image.Image):
 
 def convert_to_image(array: np.ndarray):
     return Image.fromarray(array > 0)
-
-
-def convert_to_points_list(array: np.ndarray):
-    return _convert_to_points_list2(array)
-
-
-def _convert_to_points_list(array: np.ndarray):
-    csr = csr_matrix(array)
-    return [Vector2D(x, y)
-            for x in range(csr.shape[0])
-            for y in csr.indices[csr.indptr[x]:csr.indptr[x + 1]]]
-
-
-def _convert_to_points_list2(array: np.ndarray):
-    return [Vector2D(p[0], p[1]) for p in zip(*np.where(array))]
 
 
 def from_points_list(points, shape):
@@ -97,13 +78,6 @@ def invert(array: np.ndarray):
 def flatten(array: np.ndarray):
     array[array > 1] = 1
     return array
-
-
-def point_map_to_image(point_map: dict, shape):
-    image = np.zeros(shape, int)
-    image[tuple(p for p in zip(*point_map.keys()))] = list(point_map.values())
-
-    return image
 
 
 def find_polygons(array: np.ndarray):

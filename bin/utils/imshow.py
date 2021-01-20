@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-from bin.image_array import CLOSE_METHOD_KEY_PRESS, CLOSE_TIME_DEFAULT, CLOSE_METHOD_TIMER
+from bin.adj_image_array import CLOSE_METHOD_KEY_PRESS, CLOSE_TIME_DEFAULT, CLOSE_METHOD_TIMER
 
 
 def show(array: np.ndarray, close_method: str=CLOSE_METHOD_KEY_PRESS, close_time: int=CLOSE_TIME_DEFAULT):

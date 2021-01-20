@@ -1,15 +1,15 @@
 from time import time
 from time import strftime
 
-import bin.morphology.structuring_element
+import bin.morphology.adj_structuring_element
 from bin.utils.base_dir import base_dir
 from bin.tests.utils.get_test_objects import get_test_image_array
 import bin.morphology as morphology
 
 array = get_test_image_array()
-structuring_element_3 = bin.morphology.structuring_element.circular_structuring_element(radius=3)
-structuring_element_5 = bin.morphology.structuring_element.circular_structuring_element(radius=5)
-structuring_element_10 = bin.morphology.structuring_element.circular_structuring_element(radius=10)
+structuring_element_3 = bin.morphology.adj_structuring_element.circular_structuring_element(radius=3)
+structuring_element_5 = bin.morphology.adj_structuring_element.circular_structuring_element(radius=5)
+structuring_element_10 = bin.morphology.adj_structuring_element.circular_structuring_element(radius=10)
 
 output_text_path = base_dir + 'out/test_output/timer_test_output/morphology' + strftime('%Y%m%d') + '.txt'
 

@@ -3,13 +3,13 @@ import numpy as np
 from skimage.morphology import skeletonize
 
 from . import _distance_transform
-from . import _edge_detection
-from . import _medial_axis_transform
-from . import _sharpness_transform
-from . import _skeletonisation
-from . import operations
+from . import _adj_edge_detection
+from . import _adj_medial_axis_transform
+from . import _adj_sharpness_transform
+from . import _adj_skeletonisation
+from . import adj_operations
 
-from .structuring_element import StructuringElement
+from .adj_structuring_element import StructuringElement
 from .utils import neighbour_array
 
 
@@ -18,7 +18,7 @@ def skeleton_transform(array: np.ndarray):
 
 
 def medial_axis_transform(array: np.ndarray):
-    return _medial_axis_transform.medial_axis_transform(array)
+    return _adj_medial_axis_transform.medial_axis_transform(array)
 
 
 def distance_transform(array: np.ndarray):
@@ -26,11 +26,11 @@ def distance_transform(array: np.ndarray):
 
 
 def sharpness_transform(array: np.ndarray):
-    return _sharpness_transform.sharpness_transform(array)
+    return _adj_sharpness_transform.sharpness_transform(array)
 
 
 def edge_transform(array: np.ndarray):
-    return _edge_detection.edge_detect(array)
+    return _adj_edge_detection.edge_detect(array)
 
 
 def neighbours_transform(array: np.ndarray, hang: bool = True):
@@ -41,7 +41,7 @@ def neighbours_transform(array: np.ndarray, hang: bool = True):
 
 
 def smooth(array: np.ndarray, factor: int):
-    return operations.opening(array, StructuringElement((factor, factor)))
+    return adj_operations.opening(array, StructuringElement((factor, factor)))
 
 
 

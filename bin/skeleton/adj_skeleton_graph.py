@@ -51,25 +51,3 @@ class SkeletonGraph:
             stack += [(neighbour, d+1) for neighbour in unvisited_neighbours(curr)]
 
         return d_map
-
-
-def skeleton_to_root_distance_map(root: Vector2D, skeleton: np.ndarray):
-    d_map = dict()
-    stack = [(root, 0)]
-
-    def unvisited_neighbours(node: Vector2D):
-        return [node + (x, y) for x in range(-1, 2) for y in range(-1, 2) if
-                (x, y) != (0, 0) and legal_unvisited_neighbour(node + (x, y))]
-
-    def legal_unvisited_neighbour(n: Vector2D):
-        return 0 <= n.x < skeleton.shape[0] \
-               and 0 <= n.y < skeleton.shape[1] \
-               and skeleton[n] \
-               and n not in d_map.keys()
-
-    while stack:
-        curr, d = stack.pop()
-        d_map[curr] = d
-        stack += [(neighbour, d + 1) for neighbour in unvisited_neighbours(curr)]
-
-    return d_map

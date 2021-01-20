@@ -2,9 +2,9 @@ import numpy as np
 
 from scipy.spatial import KDTree
 
-from .skeleton_graph import SkeletonGraph
+from .adj_skeleton_graph import SkeletonGraph
 
-from bin.image_array import convert_to_points_list
+from ..utils.image import convert_to_points_list
 
 
 def skeleton_map(skeleton: SkeletonGraph):

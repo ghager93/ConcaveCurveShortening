@@ -1,6 +1,6 @@
 from bin.utils.base_dir import base_dir
-import bin.image as image
-import bin.image_array as image_array
+import bin.adj_image as image
+import bin.adj_image_array as image_array
 
 from bin.morphology.transforms import smooth
 

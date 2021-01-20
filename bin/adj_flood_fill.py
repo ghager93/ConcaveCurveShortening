@@ -1,6 +1,6 @@
 import numpy as np
 
-from bin.polygon import Polygon, PolygonArray
+from bin.adj_polygon import Polygon, PolygonArray
 from bin.utils.vector2d import Vector2D
 
 

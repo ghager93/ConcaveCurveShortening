@@ -2,7 +2,7 @@ from unittest import TestCase
 import numpy as np
 
 import bin.morphology as morphology
-import bin.image_array as image_array
+import bin.adj_image_array as image_array
 
 
 class Test(TestCase):

@@ -1,8 +1,8 @@
 import numpy as np
 
 import bin.utils.imshow
-from bin import image_array
-from bin.morphology import _distance_transform, _sharpness_transform
+from bin import adj_image_array
+from bin.morphology import _distance_transform, _adj_sharpness_transform
 from bin.morphology.utils import neighbour_array
 
 
@@ -26,7 +26,7 @@ def _get_deletion_table():
 
 
 def ranking(array: np.ndarray):
-    flat_rank = np.lexsort((_sharpness_transform.sharpness_transform(array).flatten(),
+    flat_rank = np.lexsort((_adj_sharpness_transform.sharpness_transform(array).flatten(),
                             _distance_transform.distance_transform(array).flatten()))
     return [(x // array.shape[1], x % array.shape[1]) for x in flat_rank]
 

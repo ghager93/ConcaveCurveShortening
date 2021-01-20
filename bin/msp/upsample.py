@@ -1,6 +1,6 @@
 import numpy as np
 
-from bin.msp import bilinear_interp
+from bin.msp import _bilinear_interp
 
 
 def upsample(image: np.ndarray, resolution, ratio):
@@ -13,4 +13,4 @@ def _bilinear_interp_upsample(im: np.ndarray, resolution, ratio):
 
     mx, my = np.meshgrid(ix, iy)
 
-    return bilinear_interp.bilinear_interpolate(im, mx, my)
+    return _bilinear_interp.bilinear_interpolate(im, mx, my)
