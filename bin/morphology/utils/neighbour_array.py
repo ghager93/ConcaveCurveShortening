@@ -4,6 +4,10 @@ from functools import wraps
 from bin.adj_image_array import pad_by_zeroes
 from bin.utils.vector2d import Vector2D
 
+NEIGHBOUR_REF = np.array([[7, 0, 1],
+                          [6, 8, 2],
+                          [5, 4, 3]])
+
 
 def binary_to_array(b: int):
     arr = np.zeros((3, 3), dtype='bool')
@@ -189,3 +193,18 @@ def diagonal_neighbour_coordinates(b):
 
     return coords
 
+
+def relative_neighbour_binary(point: Vector2D, neighbour: Vector2D):
+    return array_point_to_binary(neighbour - point)
+
+
+def array_point_to_binary(point: Vector2D):
+    return NEIGHBOUR_REF[point + (1, 1)]
+
+
+def relative_neighbour_binary_serial(points: np.ndarray, neighbours: np.ndarray):
+    return array_point_to_binary_serial(neighbours - points)
+
+
+def array_point_to_binary_serial(points: np.ndarray):
+    return NEIGHBOUR_REF[tuple((points + (1, 1)).transpose())]
