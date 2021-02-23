@@ -1,7 +1,9 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-from bin.adj_image_array import CLOSE_METHOD_KEY_PRESS, CLOSE_TIME_DEFAULT, CLOSE_METHOD_TIMER
+from bin.adj_image_array import CLOSE_METHOD_KEY_PRESS
+
+CLOSE_TIME_DEFAULT = 1
 
 
 def show(array: np.ndarray, close_method: str=CLOSE_METHOD_KEY_PRESS, close_time: int=CLOSE_TIME_DEFAULT):
@@ -36,3 +38,7 @@ def _show_until_key_press():
     while not button_press:
         button_press = plt.waitforbuttonpress(0)
     plt.close()
+
+
+CLOSE_METHOD_TIMER = 'timer'
+CLOSE_METHOD_NO_BLOCK = 'no_block'

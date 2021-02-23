@@ -1,8 +1,15 @@
 import numpy as np
+import os
+import sys
 
-import bin.adj_image_array as image_array
+# print(os.getcwd())
+# print(sys.path)
+
 import bin.morphology._adj_edge_detection
 from bin.morphology import _adj_operations
+
+# import _adj_edge_detection
+# import _adj_operations
 
 
 def distance_transform(array: np.ndarray):
@@ -15,6 +22,7 @@ def _by_edge_detection(array: np.ndarray):
     while copy_array.any():
         out += copy_array
         copy_array -= bin.morphology._adj_edge_detection.edge_detect(copy_array)
+        # copy_array -= _adj_edge_detection.edge_detect(copy_array)
 
     return out.astype(int)
 

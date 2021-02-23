@@ -1,15 +1,9 @@
 import numpy as np
 from PIL import Image
-import matplotlib
 
 from bin import adj_flood_fill as flood_fill
 
-matplotlib.use('TkAgg')
-
 CLOSE_METHOD_KEY_PRESS = 'key_press'
-CLOSE_METHOD_TIMER = 'timer'
-CLOSE_METHOD_NO_BLOCK = 'no_block'
-CLOSE_TIME_DEFAULT = 1
 
 PADDED_ARRAY_DTYPE = 'int32'
 
@@ -69,10 +63,11 @@ def remove_pad(array: np.ndarray, pad: int = 1):
 
 
 def invert(array: np.ndarray):
-    array[array == 1] = 2
-    array[array == 0] = 1
-    array[array > 1] = 0
-    return array
+    # array[array == 1] = 2
+    # array[array == 0] = 1
+    # array[array > 1] = 0
+    # return array
+    return np.where(array == 0, 1, 0)
 
 
 def flatten(array: np.ndarray):

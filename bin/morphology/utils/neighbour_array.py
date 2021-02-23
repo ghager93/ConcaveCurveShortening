@@ -155,23 +155,37 @@ def number_of_diagonal_neighbours(b):
 
 @_array_to_binary_wrapper
 def neighbour_coordinates(b):
+    return side_neighbour_coordinates(b) + diagonal_neighbour_coordinates(b)
+
+
+@_array_to_binary_wrapper
+def side_neighbour_coordinates(b):
     coords = set()
 
     if b & 0b00000001:
         coords.add(Vector2D(-1, 0))
-    if b & 0b00000010:
-        coords.add(Vector2D(-1, 1))
     if b & 0b00000100:
         coords.add(Vector2D(0, 1))
-    if b & 0b00001000:
-        coords.add(Vector2D(1, 1))
     if b & 0b00010000:
         coords.add(Vector2D(1, 0))
-    if b & 0b00100000:
-        coords.add(Vector2D(1, -1))
     if b & 0b01000000:
         coords.add(Vector2D(0, -1))
+
+    return coords
+
+
+@_array_to_binary_wrapper
+def diagonal_neighbour_coordinates(b):
+    coords = set()
+
+    if b & 0b00000010:
+        coords.add(Vector2D(-1, 1))
+    if b & 0b00001000:
+        coords.add(Vector2D(1, 1))
+    if b & 0b00100000:
+        coords.add(Vector2D(1, -1))
     if b & 0b10000000:
         coords.add(Vector2D(-1, -1))
 
     return coords
+
