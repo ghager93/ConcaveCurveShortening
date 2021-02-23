@@ -194,17 +194,17 @@ def diagonal_neighbour_coordinates(b):
     return coords
 
 
-def relative_neighbour_binary(point: Vector2D, neighbour: Vector2D):
+def relative_neighbour_binary_dep(point: Vector2D, neighbour: Vector2D):
     return array_point_to_binary(neighbour - point)
 
 
-def array_point_to_binary(point: Vector2D):
+def array_point_to_binary_dep(point: Vector2D):
     return NEIGHBOUR_REF[point + (1, 1)]
 
 
-def relative_neighbour_binary_serial(points: np.ndarray, neighbours: np.ndarray):
-    return array_point_to_binary_serial(neighbours - points)
+def relative_neighbour_binary(points: np.ndarray, neighbours: np.ndarray):
+    return array_point_to_binary(neighbours - points)
 
 
-def array_point_to_binary_serial(points: np.ndarray):
+def array_point_to_binary(points: np.ndarray):
     return NEIGHBOUR_REF[tuple((points + (1, 1)).transpose())]
