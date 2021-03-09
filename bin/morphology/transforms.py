@@ -9,7 +9,7 @@ from . import _adj_sharpness_transform
 from . import _adj_skeletonisation
 from . import adj_operations
 
-from .adj_structuring_element import StructuringElement
+from .adj_structuring_element import circular_structuring_element
 from .utils import neighbour_array
 
 
@@ -41,7 +41,7 @@ def neighbours_transform(array: np.ndarray, hang: bool = True):
 
 
 def smooth(array: np.ndarray, factor: int):
-    return adj_operations.opening(array, StructuringElement((factor, factor)))
+    return adj_operations.opening(array, circular_structuring_element(factor))
 
 
 
