@@ -1,6 +1,6 @@
 import numpy as np
 
-import vector_diff
+from . import vector_diff
 
 
 def curve_length(curve):

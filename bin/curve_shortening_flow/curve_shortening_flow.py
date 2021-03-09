@@ -1,9 +1,9 @@
 import numpy as np
 
-import _masking
-import _point_spread
-import vector_diff
-import metrics
+from . import _masking
+from . import _point_spread
+from . import vector_diff
+from . import metrics
 
 from bin.edge_loop import EdgeLoop
 
@@ -12,7 +12,7 @@ class CurveShorteningFlow():
     MAX_ITER = 5000
 
     def __init__(self, sigma_n=1, sigma_u=1):
-        self._mask_f = _masking.continuous_heaviside_non_negative
+        self._mask_f = _masking.continuous_heaviside_non_negative_f()
         self._normal_spread_f = _point_spread.gaussian_func(sigma_n)
         self._update_spread_f = _point_spread.gaussian_func(sigma_u)
         self._step_size = 1
@@ -32,7 +32,7 @@ class CurveShorteningFlow():
         return out
 
     def _step(self, n_spread, tangent):
-        return self._update_spread_f(self._mask_f(n_spread, tangent)[:, None] * n_spread)
+        return self._update_spread_f(self._mask_f(np.cross(n_spread, tangent))[:, None] * n_spread)
 
     def _concavity(self, n_spread, tangent):
         return sum(self._mask_f(-np.cross(n_spread, tangent)))
@@ -50,6 +50,9 @@ class CurveShorteningFlow():
         x = self._downsample(x)
         x = self._discretise(x)
 
+        n_spread = self._normal_spread_f(vector_diff.normal(x))
+        tangent = vector_diff.tangent(x)
+
         return x + self._step_size * self._step(n_spread, tangent)
 
     def _step_size_update(self, x):
@@ -62,6 +65,7 @@ class CurveShorteningFlow():
     def _downsample(self, x):
         if self._downsample_condition(x):
             return x[::self._downsample_factor]
+        return x
 
     def _downsample_condition(self, x):
         return abs(self._dconcavities()) < 0.1
@@ -70,6 +74,7 @@ class CurveShorteningFlow():
         if self._discretise_condition(x):
             _, idx = np.unique(np.around(x), axis=0, return_index=True)
             return x[np.sort(idx)]
+        return x
 
     def _discretise_condition(self, x):
         return False
